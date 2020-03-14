@@ -3,7 +3,7 @@ use JSON::Fast;
 unit module Base;
 
 subset Markdown of Str is export;
-subset Base64Binary of Str is export; # should be bytes
+subset Base64Binary of Buf is export;
 subset Canonical of Str is export;
 subset Code of Str is export;
 subset Id of Str is export;
@@ -16,7 +16,7 @@ subset XHTML of Str is export;
 subset PositiveInt of Int is export where * > 0;
 subset UnsignedInt of Int is export where * >= 0;
 
-subset Primitive of Any is export where * ~~ Str|Real|Date|DateTime|Bool;
+subset Primitive of Any is export where * ~~ Str|Real|Date|DateTime|Bool|Buf;
 
 role FHIR is export {
     proto method resourceType(--> Str) {

@@ -8,7 +8,8 @@
   ],
   "auth": "github:hughsimpson",
   "depends": [
-    "JSON::Fast"
+    "JSON::Fast",
+    "Base64"
   ],
   "build-depends": [],
   "test-depends": [

@@ -1,4 +1,5 @@
 use JSON::Fast;
+use Base64;
 
 use Base;
 use DomainModel;
@@ -68,7 +69,7 @@ sub wrapWithChoice($raw, Str $suffix --> ChoiceField) is export {
 }
 
 sub fhir-obj-to-json(FHIR $obj --> Str) {
-    my Str $resourceType = $obj.resourceType.defined ?? qq`"resourceType":"{$obj.resourceType}",` !! '';
+    my Str $resourceType := $obj.resourceType.defined ?? qq`"resourceType":"{$obj.resourceType}",` !! '';
     '{' ~ $resourceType ~ $obj.^attributes
             .flatmap( -> $att { valueToField $att, $att.get_value($obj)})
             .grep({.value.defined and .value !~~ Nil})
@@ -81,26 +82,26 @@ multi valueToField(Attribute $att, Nil --> Array) {
 }
 
 multi valueToField(Attribute $att, PrimitiveElement $v --> Array) {
-    my $k = $att.name.split('!')[1];
-    my $key = $v.defined && $att.type ~~ ChoiceField ?? $k ~ $v.suffix !! $k;
+    my $k := $att.name.split('!')[1];
+    my $key := $v.defined && $att.type ~~ ChoiceField ?? $k ~ $v.suffix !! $k;
     my @extra-fields;
     if $v ~~ PrimitiveElementId {
-        my $vid = $v.id;
+        my $vid := $v.id;
         @extra-fields.push: q:s`"id":"$vid"`
     }
     if $v ~~ PrimitiveElementExtension {
-        my $vextension = jencode $v.extension;
+        my $vextension := jencode $v.extension;
         @extra-fields.push: q:s`"extension":$vextension`
     };
-    my $ped-str = '{' ~ @extra-fields.join(",") ~ '}';
-    my Pair $extra-field = "_$key" => $ped-str;
-    my Pair $field = $key => $v ~~ PhantomValue ?? Nil !! jencode $v;
+    my $ped-str := '{' ~ @extra-fields.join(",") ~ '}';
+    my Pair $extra-field := "_$key" => $ped-str;
+    my Pair $field := $key => $v ~~ PhantomValue ?? Nil !! jencode $v;
     $extra-field ?? [$field, $extra-field] !! [$field];
 }
 
 multi valueToField(Attribute $att, $v --> Array) {
-    my $k = $att.name.split('!')[1];
-    my $key = $v.defined && $v ~~ ChoiceField ?? $k ~ $v.suffix !! $k;
+    my $k := $att.name.split('!')[1];
+    my $key := $v.defined && $v ~~ ChoiceField ?? $k ~ $v.suffix !! $k;
     [$key => jencode $v];
 }
 
@@ -108,6 +109,7 @@ sub jencode($fhir --> Str) is export {
     do given $fhir {
         when $_ ~~ Nil or !.defined { Nil }
         when FHIR { fhir-obj-to-json $fhir }
+        when Buf { to-json encode-base64($_, :str) }
         when Date|DateTime|Bool|Numeric|Str { to-json $_ }
         when Array { $_ > 0 ??  '[' ~ .map(&jencode).join(',') ~ ']' !! Nil }
         default {
@@ -119,12 +121,12 @@ sub jencode($fhir --> Str) is export {
 
         # Decoding
 sub jdecode(Str $json --> FHIR) is export {
-    my %parsed = from-json $json;
+    my %parsed := from-json $json;
     jdestructure %parsed;
 }
 
 sub jdecodeAs(Str $json, FHIR:U $TARGET --> FHIR) is export {
-    my %parsed = from-json $json;
+    my %parsed := from-json $json;
     decodeAs %parsed, $TARGET;
 }
 multi jdec-choice(Str, Nil --> Nil) {
@@ -186,12 +188,12 @@ sub dec-date(Str $s --> Date) {
     }
 }
 sub mk-dt-formatter(Int $second-resolution --> Block) {
-    my Str $fmt-str = $second-resolution == 0 ??
+    my Str $fmt-str := $second-resolution == 0 ??
             '%04d-%02d-%02dT%02d:%02d:%02d%s' !!
             q:c`%04d-%02d-%02dT%02d:%02d:%0{$second-resolution + 3}.{$second-resolution}f%s`;
     -> DateTime $_ { sprintf $fmt-str, .year, .month, .day, .hour, .minute, .second, .&dt-offset }
 }
-my &dt-formatter = mk-dt-formatter 3;
+my &dt-formatter := mk-dt-formatter 3;
 sub dt-offset(DateTime $d --> Str) {
     given $d.offset-in-hours {
         when 0 { 'Z' }
@@ -220,7 +222,7 @@ multi jdec-arg($x) {
     $x;
 }
 sub jdestructure(%json --> FHIR) is export {
-    my $resourceType = %json<resourceType>;
+    my $resourceType := %json<resourceType>;
     die 'We cannot generically destructure FHIR without a resource type' unless $resourceType;
     my @mps = %json<meta><profile>.grep(?*);
     my $CONSTRUCTOR;
@@ -243,7 +245,8 @@ multi decodeAs(Hash:D $json, FHIR:U $CONSTRUCTOR --> FHIR:D) {
 }
 multi decodeAs(Any:D $json, $TPE) {
     given $TPE {
-        when Base64Binary | Canonical | Code | Id | Markdown | Str | OID | UriStr | UrlStr | UUID { $json }
+        when Base64Binary { decode-base64($json, :bin) }
+        when Canonical | Code | Id | Markdown | Str | OID | UriStr | UrlStr | UUID { $json }
         when Int { $json }
         when Bool { $json }
         when Date { dec-date($json) }
@@ -255,17 +258,17 @@ multi decodeAs(Any:D $json, $TPE) {
 }
 
 sub decodeAsHash(Hash:D $json, FHIR:U $CONSTRUCTOR --> FHIR:D) {
-    my %args = %();
+    my %args := %();
     my @atts = $CONSTRUCTOR.^attributes;
-    my %atts = @atts.categorize({.type ~~ ChoiceField});
+    my %atts := @atts.categorize({.type ~~ ChoiceField});
     if %atts{False} {for @(%atts{False}) -> $att {
-        my ($sig, $key) = $att.name.split('!');
+        my ($sig, $key) := $att.name.split('!');
         my $val = $json{$key};
         if $att.type ~~ Primitive {
-            my $el_val = $json{"_$key"};
+            my $el_val := $json{"_$key"};
             if $el_val {
-                my $id = $el_val<id>;
-                my Extension @extension = |$el_val<extension>.grep(?*).map: { decodeAs $_, Extension}
+                my $id := $el_val<id>;
+                my Extension @extension = |$el_val<extension>.grep(?*).map: { decodeAs $_, Extension }
                 if not $val.defined {
                     for @extension
                             .grep(*.url eq 'http://hl7.org/fhir/StructureDefinition/structuredefinition-json-type')
@@ -273,28 +276,30 @@ sub decodeAsHash(Hash:D $json, FHIR:U $CONSTRUCTOR --> FHIR:D) {
                             .grep(* ~~ $att.type) { $val = $_ but PhantomValue }
                 }
                 my $decoded = decodeAs $val, $att.type;
-                if $id.defined && $decoded.defined { $decoded = $decoded but PrimitiveElementId(:$id) }
-                if @extension && $decoded.defined { $decoded = $decoded but PrimitiveElementExtension(:@extension) }
-                %args{$key} = $decoded;
+                if $decoded.defined {
+                    if $id.defined { $decoded = $decoded but PrimitiveElementId(:$id) }
+                    if @extension { $decoded = $decoded but PrimitiveElementExtension(:@extension) }
+                    %args{$key} := $decoded;
+                }
             } elsif $val.defined {
-                %args{$key} = decodeAs $val, $att.type;
+                %args{$key} := decodeAs $val, $att.type;
             }
         }
         elsif $val.defined {
-            %args{$key} = decodeAs $val, $att.type;
+            %args{$key} := decodeAs $val, $att.type;
         }
     }}
     if %atts{True} {for @(%atts{True}) -> $att {
-        my ($sig, $key) = $att.name.split('!');
+        my ($sig, $key) := $att.name.split('!');
         my @candidates = $json.keys.grep: {.starts-with($key)}
         my @el_candidates = $json.keys.grep: {.starts-with("_$key")}
         my @suffixes = unique |@candidates.map(*.subst($key,'')), |@el_candidates.map(*.subst("_$key",''));
         # TODO: For now assume that it's invalid for another field to start with the name of a choice field
         given @suffixes.head {
             if .defined {
-                my $full-key = $key ~ $_;
+                my $full-key := $key ~ $_;
                 my $val = $json{$full-key};
-                my $el_val = is-primitive-suffix($_) && $json{"_$full-key"};
+                my $el_val := is-primitive-suffix($_) && $json{"_$full-key"};
                 my Str $id;
                 my Extension @extension;
                 if $el_val {
