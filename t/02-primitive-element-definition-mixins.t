@@ -1,8 +1,8 @@
 use Test;
 
 use lib 'lib';
-use Base;
-use DomainModel;
+use FHIR::Base;
+use FHIR::DomainModel;
 
 plan 20;
 

@@ -2,9 +2,9 @@ use Test;
 use JSON::Fast;
 
 use lib 'lib';
-use Base;
-use DomainModel;
-use JsonSerdes;
+use FHIR::Base;
+use FHIR::DomainModel;
+use FHIR::JsonSerdes;
 
 constant DEBUG = False;
 

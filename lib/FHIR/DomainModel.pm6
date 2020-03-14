@@ -1,4 +1,4 @@
-use Base;
+use FHIR::Base;
 
 unit module DomainModel;
 

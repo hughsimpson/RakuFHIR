@@ -18,9 +18,9 @@
     "App::Prove6"
   ],
   "provides": {
-    "FHIR": "lib/Base.pm6",
-    "FHIR::DomainModel": "lib/DomainModel.pm6",
-    "FHIR::Serdes::Json": "lib/JsonSerdes.pm6"
+    "FHIR::Base": "lib/FHIR/Base.pm6",
+    "FHIR::DomainModel": "lib/FHIR/DomainModel.pm6",
+    "FHIR::JsonSerdes": "lib/FHIR/JsonSerdes.pm6"
   },
   "resources": [],
   "license": "Artistic-2.0",

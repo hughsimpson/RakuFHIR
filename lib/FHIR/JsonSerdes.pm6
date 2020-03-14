@@ -1,8 +1,8 @@
 use JSON::Fast;
 use Base64;
 
-use Base;
-use DomainModel;
+use FHIR::Base;
+use FHIR::DomainModel;
 
 unit module JsonSerdes;
 
