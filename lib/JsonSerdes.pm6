@@ -185,7 +185,13 @@ sub dec-date(Str $s --> Date) {
         default { Date.new: $s }
     }
 }
-my &dt-formatter = { sprintf "%04d-%02d-%02dT%02d:%02d:%06.3f%s", .year, .month, .day, .hour, .minute, .second, .&dt-offset }
+sub mk-dt-formatter(Int $second-resolution --> Block) {
+    my Str $fmt-str = $second-resolution == 0 ??
+            '%04d-%02d-%02dT%02d:%02d:%02d%s' !!
+            q:c`%04d-%02d-%02dT%02d:%02d:%0{$second-resolution + 3}.{$second-resolution}f%s`;
+    -> DateTime $_ { sprintf $fmt-str, .year, .month, .day, .hour, .minute, .second, .&dt-offset }
+}
+my &dt-formatter = mk-dt-formatter 3;
 sub dt-offset(DateTime $d --> Str) {
     given $d.offset-in-hours {
         when 0 { 'Z' }
@@ -199,6 +205,8 @@ sub dec-datetime(Str $s --> DateTime) {
         when /^ \d ** 4 $/ { DateTime.new: +$s, 1, 1, 0, 0, 0, formatter => { sprintf "%04d", .year } }
         when /^ (\d ** 4) '-' (\d ** 2) $/ { DateTime.new: $0, $1, 1, 0, 0, 0, formatter => { sprintf "%04d-%02d", .year, .month } }
         when /^(\d ** 4) '-' (\d ** 2) '-' (\d ** 2) $/ { DateTime.new: $0, $1, $2, 0, 0, 0, formatter => { sprintf "%04d-%02d-%02d", .year, .month, .day } }
+        when /^ \d ** 4 '-' \d\d '-' \d\d 'T' \d\d ':' \d\d ':' \d\d ['Z' | '-' .+ | '+' .+]  $/ { DateTime.new: $s, formatter => mk-dt-formatter(0) }
+        when /^ \d ** 4 '-' \d\d '-' \d\d 'T' \d\d ':' \d\d ':' \d\d '.' (\d+) ['Z' | '-' .+ | '+' .+]  $/ { DateTime.new: $s, formatter => mk-dt-formatter(+(~$0).comb) }
         default { DateTime.new: $s, formatter => &dt-formatter }
     }
 }
