@@ -39,6 +39,7 @@ class Ratio  { ... }
 class Reference  { ... }
 class Timing  { ... }
 class TriggerDefinition  { ... }
+class FHIRSignature  { ... }
 
 role PrimitiveElement is export { }
 role PrimitiveElementId does PrimitiveElement is export { has Str $.id  }
@@ -49,7 +50,7 @@ class Resource is FHIR is export {
   method resourceType(--> 'Resource') {}
   has Id $.id;
   has Meta $.meta;
-  has Code $.language;
+  has FHIRCode $.language;
   has UriStr $.implicitRules;
 }
 
@@ -80,7 +81,7 @@ class BackboneElement is Element is export {
 
 class RelatedArtifact is Element is export {
   has UrlStr $.url;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.label;
   has Str $.display;
   has Markdown $.citation;
@@ -101,7 +102,7 @@ class Parameters_Parameter is FHIR is export {
   has Str $.id;
   has Str $.name is required;
   has Parameters_Parameter @.part;
-  has ChoiceField $.value where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Resource $.resource;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -118,15 +119,15 @@ class Attachment is Element is export {
   has UnsignedInt $.size;
   has Base64Binary $.hash;
   has Str $.title;
-  has Code $.language;
+  has FHIRCode $.language;
   has DateTime $.creation;
-  has Code $.contentType;
+  has FHIRCode $.contentType;
 }
 class DataRequirement_Sort is FHIR is export {
   has Str $.id;
   has Str $.path is required;
   has Extension @.extension;
-  has Code $.direction is required;
+  has FHIRCode $.direction is required;
 }
 
 class DataRequirement_CodeFilter is FHIR is export {
@@ -147,7 +148,7 @@ class DataRequirement_DateFilter is FHIR is export {
 }
 
 class DataRequirement is Element is export {
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has PositiveInt $.limit;
   has Canonical @.profile;
   has ChoiceField $.subject where CodeableConcept|Reference;
@@ -164,7 +165,7 @@ class Range is Element is export {
 
 class Money is Element is export {
   has Real $.value;
-  has Code $.currency;
+  has FHIRCode $.currency;
 }
 class Bundle_Link is FHIR is export {
   has Str $.id;
@@ -176,7 +177,7 @@ class Bundle_Link is FHIR is export {
 
 class Bundle_Entry_Search is FHIR is export {
   has Str $.id;
-  has Code $.mode;
+  has FHIRCode $.mode;
   has Real $.score;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -185,7 +186,7 @@ class Bundle_Entry_Search is FHIR is export {
 class Bundle_Entry_Request is FHIR is export {
   has Str $.id;
   has UriStr $.url is required;
-  has Code $.method is required;
+  has FHIRCode $.method is required;
   has Str $.ifMatch;
   has Extension @.extension;
   has Str $.ifNoneMatch;
@@ -218,10 +219,10 @@ class Bundle_Entry is FHIR is export {
 
 class Bundle is Resource is export {
   method resourceType(--> 'Bundle') {}
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has UnsignedInt $.total;
   has DateTime $.timestamp;
-  has Signature $.signature;
+  has FHIRSignature $.signature;
   has Identifier $.identifier;
   has Bundle_Link @.link;
   has Bundle_Entry @.entry;
@@ -236,21 +237,21 @@ class Reference is Element is export {
 
 class Expression is Element is export {
   has Id $.name;
-  has Code $.language is required;
+  has FHIRCode $.language is required;
   has UriStr $.reference;
   has Str $.expression;
   has Str $.description;
 }
 
 class Contributor is Element is export {
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.name is required;
   has ContactDetail @.contact;
 }
 
 class Address is Element is export {
-  has Code $.use;
-  has Code $.type;
+  has FHIRCode $.use;
+  has FHIRCode $.type;
   has Str $.text;
   has Str @.line;
   has Str $.city;
@@ -263,15 +264,15 @@ class Address is Element is export {
 
 class Narrative is Element is export {
   has XHTML $.div is required;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
 }
 
 class Quantity is Element is export {
   has Str $.unit;
-  has Code $.code;
+  has FHIRCode $.code;
   has Real $.value;
   has UriStr $.system;
-  has Code $.comparator;
+  has FHIRCode $.comparator;
 }
 
 class ContactDetail is Element is export {
@@ -280,10 +281,10 @@ class ContactDetail is Element is export {
 }
 
 class ContactPoint is Element is export {
-  has Code $.use;
+  has FHIRCode $.use;
   has PositiveInt $.rank;
   has Str $.value;
-  has Code $.system;
+  has FHIRCode $.system;
   has Period $.period;
 }
 
@@ -293,7 +294,7 @@ class CodeableConcept is Element is export {
 }
 
 class Coding is Element is export {
-  has Code $.code;
+  has FHIRCode $.code;
   has UriStr $.system;
   has Str $.version;
   has Str $.display;
@@ -301,11 +302,11 @@ class Coding is Element is export {
 }
 
 class ParameterDefinition is Element is export {
-  has Code $.use is required;
+  has FHIRCode $.use is required;
   has Int $.min;
   has Str $.max;
-  has Code $.name;
-  has Code $.type is required;
+  has FHIRCode $.name;
+  has FHIRCode $.type is required;
   has Canonical $.profile;
   has Str $.documentation;
 }
@@ -318,23 +319,23 @@ class Ratio is Element is export {
 class Binary is Resource is export {
   method resourceType(--> 'Binary') {}
   has Base64Binary $.data;
-  has Code $.contentType is required;
+  has FHIRCode $.contentType is required;
   has Reference $.securityContext;
 }
 
 class Extension is Element is export {
   has Str $.url is required;
-  has ChoiceField $.value where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
 }
 
-class Signature is Element is export {
+class FHIRSignature is Element is export {
   has Reference $.who is required;
   has Coding @.type is required;
   has DateTime $.when is required;
   has Base64Binary $.data;
-  has Code $.sigFormat;
+  has FHIRCode $.sigFormat;
   has Reference $.onBehalfOf;
-  has Code $.targetFormat;
+  has FHIRCode $.targetFormat;
 }
 
 class DomainResource is Resource is export {
@@ -346,7 +347,7 @@ class DomainResource is Resource is export {
 }
 
 class Identifier is Element is export {
-  has Code $.use;
+  has FHIRCode $.use;
   has CodeableConcept $.type;
   has Str $.value;
   has UriStr $.system;
@@ -364,7 +365,7 @@ class Meta is Element is export {
 }
 
 class TriggerDefinition is Element is export {
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.name;
   has DataRequirement @.data;
   has ChoiceField $.timing where Date|DateTime|Reference|Timing;
@@ -372,7 +373,7 @@ class TriggerDefinition is Element is export {
 }
 
 class HumanName is Element is export {
-  has Code $.use;
+  has FHIRCode $.use;
   has Str $.text;
   has Str @.given;
   has Str $.family;
@@ -384,7 +385,7 @@ class HumanName is Element is export {
 class PaymentNotice is DomainResource is export {
   method resourceType(--> 'PaymentNotice') {}
   has Reference $.payee;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Money $.amount is required;
   has Reference $.request;
   has DateTime $.created is required;
@@ -400,7 +401,7 @@ class AllergyIntolerance_Reaction is FHIR is export {
   has Str $.id;
   has Annotation @.note;
   has DateTime $.onset;
-  has Code $.severity;
+  has FHIRCode $.severity;
   has Extension @.extension;
   has CodeableConcept $.substance;
   has Str $.description;
@@ -411,17 +412,17 @@ class AllergyIntolerance_Reaction is FHIR is export {
 
 class AllergyIntolerance is DomainResource is export {
   method resourceType(--> 'AllergyIntolerance') {}
-  has Code $.type;
+  has FHIRCode $.type;
   has CodeableConcept $.code;
   has Annotation @.note;
   has Reference $.patient is required;
-  has Code @.category;
+  has FHIRCode @.category;
   has ChoiceField $.onset where Age|DateTime|Period|Range|Str;
   has Reference $.recorder;
   has Reference $.asserter;
   has Reference $.encounter;
   has Identifier @.identifier;
-  has Code $.criticality;
+  has FHIRCode $.criticality;
   has DateTime $.recordedDate;
   has CodeableConcept $.clinicalStatus;
   has DateTime $.lastOccurrence;
@@ -437,7 +438,7 @@ class EventDefinition is DomainResource is export {
   has Str $.title;
   has Str $.usage;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -469,7 +470,7 @@ class Evidence is DomainResource is export {
   has Annotation @.note;
   has Str $.title;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -512,7 +513,7 @@ class Substance_Ingredient is FHIR is export {
 class Substance is DomainResource is export {
   method resourceType(--> 'Substance') {}
   has CodeableConcept $.code is required;
-  has Code $.status;
+  has FHIRCode $.status;
   has CodeableConcept @.category;
   has Identifier @.identifier;
   has Str $.description;
@@ -524,13 +525,13 @@ class ServiceRequest is DomainResource is export {
   method resourceType(--> 'ServiceRequest') {}
   has CodeableConcept $.code;
   has Annotation @.note;
-  has Code $.status is required;
-  has Code $.intent is required;
+  has FHIRCode $.status is required;
+  has FHIRCode $.intent is required;
   has Reference @.basedOn;
   has Reference $.subject is required;
   has Reference @.replaces;
   has CodeableConcept @.category;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Reference @.specimen;
   has CodeableConcept @.bodySite;
   has Reference $.encounter;
@@ -585,7 +586,7 @@ class AdverseEvent is DomainResource is export {
   has Reference $.location;
   has CodeableConcept $.severity;
   has Reference $.recorder;
-  has Code $.actuality is required;
+  has FHIRCode $.actuality is required;
   has Reference $.encounter;
   has Identifier $.identifier;
   has CodeableConcept $.seriousness;
@@ -598,7 +599,7 @@ class AdverseEvent is DomainResource is export {
 }
 class Patient_Link is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Reference $.other is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -607,7 +608,7 @@ class Patient_Link is FHIR is export {
 class Patient_Contact is FHIR is export {
   has Str $.id;
   has HumanName $.name;
-  has Code $.gender;
+  has FHIRCode $.gender;
   has Period $.period;
   has ContactPoint @.telecom;
   has Address $.address;
@@ -630,7 +631,7 @@ class Patient is DomainResource is export {
   has HumanName @.name;
   has Attachment @.photo;
   has Bool $.active;
-  has Code $.gender;
+  has FHIRCode $.gender;
   has ContactPoint @.telecom;
   has Address @.address;
   has Date $.birthDate;
@@ -659,7 +660,7 @@ class Practitioner is DomainResource is export {
   has HumanName @.name;
   has Attachment @.photo;
   has Bool $.active;
-  has Code $.gender;
+  has FHIRCode $.gender;
   has ContactPoint @.telecom;
   has Address @.address;
   has Date $.birthDate;
@@ -686,9 +687,9 @@ class MedicinalProductInteraction is DomainResource is export {
 }
 class OperationOutcome_Issue is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has CodeableConcept $.details;
-  has Code $.severity is required;
+  has FHIRCode $.severity is required;
   has Str @.location;
   has Extension @.extension;
   has Str @.expression;
@@ -720,11 +721,11 @@ class DetectedIssue_Mitigation is FHIR is export {
 class DetectedIssue is DomainResource is export {
   method resourceType(--> 'DetectedIssue') {}
   has CodeableConcept $.code;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.author;
   has Str $.detail;
   has Reference $.patient;
-  has Code $.severity;
+  has FHIRCode $.severity;
   has UriStr $.reference;
   has Identifier @.identifier;
   has Reference @.implicated;
@@ -744,7 +745,7 @@ class StructureDefinition_Mapping is FHIR is export {
 
 class StructureDefinition_Context is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Extension @.extension;
   has Str $.expression is required;
   has Extension @.modifierExtension;
@@ -769,10 +770,10 @@ class StructureDefinition is DomainResource is export {
   has UriStr $.url is required;
   has Str $.name is required;
   has DateTime $.date;
-  has Code $.kind is required;
+  has FHIRCode $.kind is required;
   has UriStr $.type is required;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -782,9 +783,9 @@ class StructureDefinition is DomainResource is export {
   has Markdown $.copyright;
   has Identifier @.identifier;
   has UsageContext @.useContext;
-  has Code $.derivation;
+  has FHIRCode $.derivation;
   has Markdown $.description;
-  has Code $.fhirVersion;
+  has FHIRCode $.fhirVersion;
   has Bool $.experimental;
   has CodeableConcept @.jurisdiction;
   has Canonical $.baseDefinition;
@@ -850,7 +851,7 @@ class RiskEvidenceSynthesis is DomainResource is export {
   has Annotation @.note;
   has Str $.title;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -907,12 +908,12 @@ class MedicationRequest_DispenseRequest is FHIR is export {
 class MedicationRequest is DomainResource is export {
   method resourceType(--> 'MedicationRequest') {}
   has Annotation @.note;
-  has Code $.status is required;
-  has Code $.intent is required;
+  has FHIRCode $.status is required;
+  has FHIRCode $.intent is required;
   has Reference $.subject is required;
   has Reference @.basedOn;
   has CodeableConcept @.category;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Reference $.recorder;
   has Reference $.encounter;
   has Reference $.requester;
@@ -942,7 +943,7 @@ class MedicationRequest is DomainResource is export {
 class StructureMap_Structure is FHIR is export {
   has Str $.id;
   has Canonical $.url is required;
-  has Code $.mode is required;
+  has FHIRCode $.mode is required;
   has Str $.alias;
   has Extension @.extension;
   has Str $.documentation;
@@ -953,7 +954,7 @@ class StructureMap_Group_Input is FHIR is export {
   has Str $.id;
   has Id $.name is required;
   has Str $.type;
-  has Code $.mode is required;
+  has FHIRCode $.mode is required;
   has Extension @.extension;
   has Str $.documentation;
   has Extension @.modifierExtension;
@@ -967,12 +968,12 @@ class StructureMap_Group_Rule_Source is FHIR is export {
   has Str $.check;
   has Id $.context is required;
   has Str $.element;
-  has Code $.listMode;
+  has FHIRCode $.listMode;
   has Id $.variable;
   has Extension @.extension;
   has Str $.condition;
   has Str $.logMessage;
-  has ChoiceField $.defaultValue where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.defaultValue where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Extension @.modifierExtension;
 }
 
@@ -995,11 +996,11 @@ class StructureMap_Group_Rule_Target is FHIR is export {
   has Id $.context;
   has Str $.element;
   has Id $.variable;
-  has Code @.listMode;
+  has FHIRCode @.listMode;
   has Extension @.extension;
-  has Code $.transform;
+  has FHIRCode $.transform;
   has Id $.listRuleId;
-  has Code $.contextType;
+  has FHIRCode $.contextType;
   has Extension @.modifierExtension;
   has StructureMap_Group_Rule_Target_Parameter @.parameter;
 }
@@ -1018,7 +1019,7 @@ class StructureMap_Group is FHIR is export {
   has Str $.id;
   has Id $.name is required;
   has Id $.extends;
-  has Code $.typeMode is required;
+  has FHIRCode $.typeMode is required;
   has Extension @.extension;
   has Str $.documentation;
   has Extension @.modifierExtension;
@@ -1032,7 +1033,7 @@ class StructureMap is DomainResource is export {
   has Str $.name is required;
   has DateTime $.date;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Canonical @.import;
   has Str $.version;
   has ContactDetail @.contact;
@@ -1049,9 +1050,9 @@ class StructureMap is DomainResource is export {
 }
 class Subscription_Channel is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str @.header;
-  has Code $.payload;
+  has FHIRCode $.payload;
   has UrlStr $.endpoint;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -1061,7 +1062,7 @@ class Subscription is DomainResource is export {
   method resourceType(--> 'Subscription') {}
   has DateTime $.end;
   has Str $.error;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.reason is required;
   has ContactPoint @.contact;
   has Str $.criteria is required;
@@ -1070,7 +1071,7 @@ class Subscription is DomainResource is export {
 class TestReport_Participant is FHIR is export {
   has Str $.id;
   has UriStr $.uri is required;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.display;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -1107,7 +1108,7 @@ class TestReport_Teardown is FHIR is export {
 
 class TestReport_Setup_Action_Assert is FHIR is export {
   has Str $.id;
-  has Code $.result is required;
+  has FHIRCode $.result is required;
   has Str $.detail;
   has Markdown $.message;
   has Extension @.extension;
@@ -1116,7 +1117,7 @@ class TestReport_Setup_Action_Assert is FHIR is export {
 
 class TestReport_Setup_Action_Operation is FHIR is export {
   has Str $.id;
-  has Code $.result is required;
+  has FHIRCode $.result is required;
   has UriStr $.detail;
   has Markdown $.message;
   has Extension @.extension;
@@ -1140,8 +1141,8 @@ class TestReport is DomainResource is export {
   method resourceType(--> 'TestReport') {}
   has Str $.name;
   has Real $.score;
-  has Code $.status is required;
-  has Code $.result is required;
+  has FHIRCode $.status is required;
+  has FHIRCode $.result is required;
   has Str $.tester;
   has DateTime $.issued;
   has Identifier $.identifier;
@@ -1154,9 +1155,9 @@ class TestReport is DomainResource is export {
 
 class EnrollmentResponse is DomainResource is export {
   method resourceType(--> 'EnrollmentResponse') {}
-  has Code $.status;
+  has FHIRCode $.status;
   has Reference $.request;
-  has Code $.outcome;
+  has FHIRCode $.outcome;
   has DateTime $.created;
   has Identifier @.identifier;
   has Str $.disposition;
@@ -1167,7 +1168,7 @@ class MessageDefinition_Focus is FHIR is export {
   has Str $.id;
   has UnsignedInt $.min is required;
   has Str $.max;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Canonical $.profile;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -1189,14 +1190,14 @@ class MessageDefinition is DomainResource is export {
   has Canonical $.base;
   has Str $.title;
   has Canonical @.graph;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Canonical @.parent;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
   has Canonical @.replaces;
   has ChoiceField $.event is required where Coding|UriStr;
-  has Code $.category;
+  has FHIRCode $.category;
   has Str $.publisher;
   has Markdown $.copyright;
   has Identifier @.identifier;
@@ -1204,7 +1205,7 @@ class MessageDefinition is DomainResource is export {
   has Markdown $.description;
   has Bool $.experimental;
   has CodeableConcept @.jurisdiction;
-  has Code $.responseRequired;
+  has FHIRCode $.responseRequired;
   has MessageDefinition_Focus @.focus;
   has MessageDefinition_AllowedResponse @.allowedResponse;
 }
@@ -1355,21 +1356,21 @@ class TestScript_Setup_Action_Assert is FHIR is export {
   has Str $.path;
   has Str $.label;
   has Str $.value;
-  has Code $.operator;
-  has Code $.resource;
-  has Code $.response;
+  has FHIRCode $.operator;
+  has FHIRCode $.resource;
+  has FHIRCode $.response;
   has Id $.sourceId;
   has Extension @.extension;
-  has Code $.direction;
+  has FHIRCode $.direction;
   has Str $.minimumId;
   has Str $.expression;
   has Str $.requestURL;
   has Str $.description;
-  has Code $.contentType;
+  has FHIRCode $.contentType;
   has Str $.headerField;
   has Bool $.warningOnly is required;
   has Str $.responseCode;
-  has Code $.requestMethod;
+  has FHIRCode $.requestMethod;
   has Bool $.navigationLinks;
   has Extension @.modifierExtension;
   has Str $.compareToSourceId;
@@ -1390,18 +1391,18 @@ class TestScript_Setup_Action_Operation is FHIR is export {
   has Str $.url;
   has Coding $.type;
   has Str $.label;
-  has Code $.accept;
-  has Code $.method;
+  has FHIRCode $.accept;
+  has FHIRCode $.method;
   has Int $.origin;
   has Str $.params;
-  has Code $.resource;
+  has FHIRCode $.resource;
   has Id $.sourceId;
   has Id $.targetId;
   has Extension @.extension;
   has Id $.requestId;
   has Id $.responseId;
   has Str $.description;
-  has Code $.contentType;
+  has FHIRCode $.contentType;
   has Int $.destination;
   has Bool $.encodeRequestUrl is required;
   has Extension @.modifierExtension;
@@ -1427,7 +1428,7 @@ class TestScript is DomainResource is export {
   has Str $.name is required;
   has DateTime $.date;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -1465,7 +1466,7 @@ class FamilyMemberHistory is DomainResource is export {
   has DateTime $.date;
   has Str $.name;
   has Annotation @.note;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ChoiceField $.age where Age|Range|Str;
   has Reference $.patient is required;
   has ChoiceField $.born where Date|Period|Str;
@@ -1519,7 +1520,7 @@ class TerminologyCapabilities_Implementation is FHIR is export {
 
 class TerminologyCapabilities_Expansion_Parameter is FHIR is export {
   has Str $.id;
-  has Code $.name is required;
+  has FHIRCode $.name is required;
   has Extension @.extension;
   has Str $.documentation;
   has Extension @.modifierExtension;
@@ -1537,16 +1538,16 @@ class TerminologyCapabilities_Expansion is FHIR is export {
 
 class TerminologyCapabilities_CodeSystem_Version_Filter is FHIR is export {
   has Str $.id;
-  has Code @.op is required;
-  has Code $.code is required;
+  has FHIRCode @.op is required;
+  has FHIRCode $.code is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
 class TerminologyCapabilities_CodeSystem_Version is FHIR is export {
   has Str $.id;
   has Str $.code;
-  has Code @.language;
-  has Code @.property;
+  has FHIRCode @.language;
+  has FHIRCode @.property;
   has Extension @.extension;
   has Bool $.isDefault;
   has Bool $.compositional;
@@ -1567,9 +1568,9 @@ class TerminologyCapabilities is DomainResource is export {
   has UriStr $.url;
   has Str $.name;
   has DateTime $.date is required;
-  has Code $.kind is required;
+  has FHIRCode $.kind is required;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -1577,7 +1578,7 @@ class TerminologyCapabilities is DomainResource is export {
   has Markdown $.copyright;
   has UsageContext @.useContext;
   has Bool $.lockedDate;
-  has Code $.codeSearch;
+  has FHIRCode $.codeSearch;
   has Markdown $.description;
   has Bool $.experimental;
   has CodeableConcept @.jurisdiction;
@@ -1591,7 +1592,7 @@ class TerminologyCapabilities is DomainResource is export {
 }
 class ExampleScenario_Actor is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.name;
   has Str $.actorId is required;
   has Extension @.extension;
@@ -1664,7 +1665,7 @@ class ExampleScenario_Instance is FHIR is export {
   has Extension @.extension;
   has Str $.resourceId is required;
   has Markdown $.description;
-  has Code $.resourceType is required;
+  has FHIRCode $.resourceType is required;
   has Extension @.modifierExtension;
   has ExampleScenario_Instance_Version @.version;
   has ExampleScenario_Instance_ContainedInstance @.containedInstance;
@@ -1675,7 +1676,7 @@ class ExampleScenario is DomainResource is export {
   has UriStr $.url;
   has Str $.name;
   has DateTime $.date;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -1692,7 +1693,7 @@ class ExampleScenario is DomainResource is export {
 }
 class Timing_Repeat is FHIR is export {
   has Str $.id;
-  has Code @.when;
+  has FHIRCode @.when;
   has PositiveInt $.count;
   has Real $.period;
   has UnsignedInt $.offset;
@@ -1702,11 +1703,11 @@ class Timing_Repeat is FHIR is export {
   has ChoiceField $.bounds where Duration|Period|Range;
   has PositiveInt $.frequency;
   has Real $.periodMax;
-  has Code @.dayOfWeek;
+  has FHIRCode @.dayOfWeek;
   has Instant @.timeOfDay;
-  has Code $.periodUnit;
+  has FHIRCode $.periodUnit;
   has Real $.durationMax;
-  has Code $.durationUnit;
+  has FHIRCode $.durationUnit;
   has PositiveInt $.frequencyMax;
 }
 
@@ -1728,7 +1729,7 @@ class MessageHeader_Source is FHIR is export {
 
 class MessageHeader_Response is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Reference $.details;
   has Extension @.extension;
   has Id $.identifier is required;
@@ -1782,7 +1783,7 @@ class Goal is DomainResource is export {
   has Reference $.expressedBy;
   has CodeableConcept @.outcomeCode;
   has Str $.statusReason;
-  has Code $.lifecycleStatus is required;
+  has FHIRCode $.lifecycleStatus is required;
   has Reference @.outcomeReference;
   has CodeableConcept $.achievementStatus;
   has Goal_Target @.target;
@@ -1810,7 +1811,7 @@ class MedicationDispense is DomainResource is export {
   has CodeableConcept $.type;
   has Annotation @.note;
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.subject;
   has Reference $.context;
   has CodeableConcept $.category;
@@ -1842,7 +1843,7 @@ class OperationDefinition_Overload is FHIR is export {
 
 class OperationDefinition_Parameter_Binding is FHIR is export {
   has Str $.id;
-  has Code $.strength is required;
+  has FHIRCode $.strength is required;
   has Canonical $.valueSet is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -1857,14 +1858,14 @@ class OperationDefinition_Parameter_ReferencedFrom is FHIR is export {
 }
 class OperationDefinition_Parameter is FHIR is export {
   has Str $.id;
-  has Code $.use is required;
+  has FHIRCode $.use is required;
   has Int $.min is required;
   has Str $.max is required;
-  has Code $.name is required;
-  has Code $.type;
+  has FHIRCode $.name is required;
+  has FHIRCode $.type;
   has OperationDefinition_Parameter @.part;
   has Extension @.extension;
-  has Code $.searchType;
+  has FHIRCode $.searchType;
   has Str $.documentation;
   has Canonical @.targetProfile;
   has Extension @.modifierExtension;
@@ -1876,19 +1877,19 @@ class OperationDefinition is DomainResource is export {
   method resourceType(--> 'OperationDefinition') {}
   has UriStr $.url;
   has Str $.name is required;
-  has Code $.kind is required;
+  has FHIRCode $.kind is required;
   has DateTime $.date;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Canonical $.base;
   has Bool $.type is required;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Bool $.system is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
   has Markdown $.comment;
-  has Code @.resource;
+  has FHIRCode @.resource;
   has Bool $.instance is required;
   has Str $.publisher;
   has UsageContext @.useContext;
@@ -1933,7 +1934,7 @@ class ClaimResponse_Payment is FHIR is export {
 
 class ClaimResponse_ProcessNote is FHIR is export {
   has Str $.id;
-  has Code $.type;
+  has FHIRCode $.type;
   has Str $.text is required;
   has PositiveInt $.number;
   has CodeableConcept $.language;
@@ -2042,16 +2043,16 @@ class ClaimResponse_AddItem is FHIR is export {
 
 class ClaimResponse is DomainResource is export {
   method resourceType(--> 'ClaimResponse') {}
-  has Code $.use is required;
+  has FHIRCode $.use is required;
   has CodeableConcept $.type is required;
   has Attachment $.form;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has CodeableConcept $.subType;
   has Reference $.patient is required;
   has DateTime $.created is required;
   has Reference $.insurer is required;
   has Reference $.request;
-  has Code $.outcome is required;
+  has FHIRCode $.outcome is required;
   has CodeableConcept $.formCode;
   has Reference $.requestor;
   has CodeableConcept $.payeeType;
@@ -2093,7 +2094,7 @@ class DocumentReference_Context is FHIR is export {
 
 class DocumentReference_RelatesTo is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Reference $.target is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -2103,11 +2104,11 @@ class DocumentReference is DomainResource is export {
   method resourceType(--> 'DocumentReference') {}
   has CodeableConcept $.type;
   has DateTime $.date;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference @.author;
   has Reference $.subject;
   has CodeableConcept @.category;
-  has Code $.docStatus;
+  has FHIRCode $.docStatus;
   has Reference $.custodian;
   has Identifier @.identifier;
   has Str $.description;
@@ -2142,7 +2143,7 @@ class MedicationAdministration is DomainResource is export {
   method resourceType(--> 'MedicationAdministration') {}
   has Annotation @.note;
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference @.device;
   has Reference $.subject is required;
   has Reference $.context;
@@ -2170,7 +2171,7 @@ class AppointmentResponse is DomainResource is export {
   has Identifier @.identifier;
   has Reference $.appointment is required;
   has CodeableConcept @.participantType;
-  has Code $.participantStatus is required;
+  has FHIRCode $.participantStatus is required;
 }
 class Provenance_Agent is FHIR is export {
   has Str $.id;
@@ -2184,7 +2185,7 @@ class Provenance_Agent is FHIR is export {
 
 class Provenance_Entity is FHIR is export {
   has Str $.id;
-  has Code $.role is required;
+  has FHIRCode $.role is required;
   has Reference $.what is required;
   has Provenance_Agent @.agent;
   has Extension @.extension;
@@ -2199,7 +2200,7 @@ class Provenance is DomainResource is export {
   has DateTime $.recorded is required;
   has Reference $.location;
   has CodeableConcept $.activity;
-  has Signature @.signature;
+  has FHIRSignature @.signature;
   has ChoiceField $.occurred where DateTime|Period;
   has Provenance_Agent @.agent is required;
   has Provenance_Entity @.entity;
@@ -2219,9 +2220,9 @@ class ObservationDefinition_QualifiedInterval is FHIR is export {
   has Str $.id;
   has Range $.age;
   has Range $.range;
-  has Code $.gender;
+  has FHIRCode $.gender;
   has CodeableConcept $.context;
-  has Code $.category;
+  has FHIRCode $.category;
   has Extension @.extension;
   has CodeableConcept @.appliesTo;
   has Str $.condition;
@@ -2245,7 +2246,7 @@ class ObservationDefinition is DomainResource is export {
   has CodeableConcept $.method;
   has CodeableConcept @.category;
   has Identifier @.identifier;
-  has Code @.permittedDataType;
+  has FHIRCode @.permittedDataType;
   has Reference $.validCodedValueSet;
   has Str $.preferredReportName;
   has Reference $.normalCodedValueSet;
@@ -2267,7 +2268,7 @@ class SupplyDelivery is DomainResource is export {
   method resourceType(--> 'SupplyDelivery') {}
   has CodeableConcept $.type;
   has Reference @.partOf;
-  has Code $.status;
+  has FHIRCode $.status;
   has Reference @.basedOn;
   has Reference $.patient;
   has Reference $.supplier;
@@ -2299,7 +2300,7 @@ class ClinicalImpression is DomainResource is export {
   has CodeableConcept $.code;
   has DateTime $.date;
   has Annotation @.note;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.subject is required;
   has Reference @.problem;
   has Str $.summary;
@@ -2346,7 +2347,7 @@ class Observation is DomainResource is export {
   has Annotation @.note;
   has Reference @.focus;
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has DateTime $.issued;
   has CodeableConcept $.method;
   has Reference $.device;
@@ -2369,10 +2370,10 @@ class Observation is DomainResource is export {
 }
 class CarePlan_Activity_Detail is FHIR is export {
   has Str $.id;
-  has Code $.kind;
+  has FHIRCode $.kind;
   has CodeableConcept $.code;
   has Reference @.goal;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.location;
   has Quantity $.quantity;
   has Extension @.extension;
@@ -2406,8 +2407,8 @@ class CarePlan is DomainResource is export {
   has Annotation @.note;
   has Str $.title;
   has Reference @.partOf;
-  has Code $.status is required;
-  has Code $.intent is required;
+  has FHIRCode $.status is required;
+  has FHIRCode $.intent is required;
   has Period $.period;
   has Reference $.author;
   has Reference @.basedOn;
@@ -2432,7 +2433,7 @@ class EvidenceVariable_Characteristic is FHIR is export {
   has Extension @.extension;
   has Str $.description;
   has UsageContext @.usageContext;
-  has Code $.groupMeasure;
+  has FHIRCode $.groupMeasure;
   has ChoiceField $.definition is required where Canonical|CodeableConcept|DataRequirement|Expression|Reference|TriggerDefinition;
   has Duration $.timeFromStart;
   has Extension @.modifierExtension;
@@ -2445,10 +2446,10 @@ class EvidenceVariable is DomainResource is export {
   has Str $.name;
   has DateTime $.date;
   has Annotation @.note;
-  has Code $.type;
+  has FHIRCode $.type;
   has Str $.title;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -2473,7 +2474,7 @@ class EvidenceVariable is DomainResource is export {
 class ImmunizationEvaluation is DomainResource is export {
   method resourceType(--> 'ImmunizationEvaluation') {}
   has DateTime $.date;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.series;
   has Reference $.patient is required;
   has Reference $.authority;
@@ -2499,7 +2500,7 @@ class Location_HoursOfOperation is FHIR is export {
   has Str $.id;
   has Bool $.allDay;
   has Extension @.extension;
-  has Code @.daysOfWeek;
+  has FHIRCode @.daysOfWeek;
   has Instant $.openingTime;
   has Instant $.closingTime;
   has Extension @.modifierExtension;
@@ -2508,10 +2509,10 @@ class Location_HoursOfOperation is FHIR is export {
 class Location is DomainResource is export {
   method resourceType(--> 'Location') {}
   has Str $.name;
-  has Code $.mode;
+  has FHIRCode $.mode;
   has CodeableConcept @.type;
   has Str @.alias;
-  has Code $.status;
+  has FHIRCode $.status;
   has Reference $.partOf;
   has ContactPoint @.telecom;
   has Address $.address;
@@ -2541,7 +2542,7 @@ class ChargeItem is DomainResource is export {
   method resourceType(--> 'ChargeItem') {}
   has CodeableConcept $.code is required;
   has Annotation @.note;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference @.partOf;
   has CodeableConcept @.reason;
   has Reference $.subject is required;
@@ -2606,7 +2607,7 @@ class Condition is DomainResource is export {
 class Task_Input is FHIR is export {
   has Str $.id;
   has CodeableConcept $.type is required;
-  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -2614,7 +2615,7 @@ class Task_Input is FHIR is export {
 class Task_Output is FHIR is export {
   has Str $.id;
   has CodeableConcept $.type is required;
-  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -2636,10 +2637,10 @@ class Task is DomainResource is export {
   has Reference $.focus;
   has Reference $.owner;
   has Reference @.partOf;
-  has Code $.status is required;
-  has Code $.intent is required;
+  has FHIRCode $.status is required;
+  has FHIRCode $.intent is required;
   has Reference @.basedOn;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Reference $.location;
   has Reference $.encounter;
   has Reference $.requester;
@@ -2680,7 +2681,7 @@ class RiskAssessment is DomainResource is export {
   has Annotation @.note;
   has Reference @.basis;
   has Reference $.parent;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has CodeableConcept $.method;
   has Reference $.basedOn;
   has Reference $.subject is required;
@@ -2698,7 +2699,7 @@ class RiskAssessment is DomainResource is export {
 class GuidanceResponse is DomainResource is export {
   method resourceType(--> 'GuidanceResponse') {}
   has Annotation @.note;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.result;
   has Reference $.subject;
   has ChoiceField $.module is required where Canonical|CodeableConcept|UriStr;
@@ -2735,7 +2736,7 @@ class Device_UdiCarrier is FHIR is export {
   has Str $.id;
   has UriStr $.issuer;
   has Extension @.extension;
-  has Code $.entryType;
+  has FHIRCode $.entryType;
   has Str $.carrierHRF;
   has Base64Binary $.carrierAIDC;
   has UriStr $.jurisdiction;
@@ -2746,7 +2747,7 @@ class Device_UdiCarrier is FHIR is export {
 class Device_DeviceName is FHIR is export {
   has Str $.id;
   has Str $.name is required;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -2765,7 +2766,7 @@ class Device is DomainResource is export {
   has CodeableConcept $.type;
   has Annotation @.note;
   has Reference $.owner;
-  has Code $.status;
+  has FHIRCode $.status;
   has CodeableConcept @.safety;
   has Reference $.parent;
   has Reference $.patient;
@@ -2792,7 +2793,7 @@ class Device is DomainResource is export {
 class Endpoint is DomainResource is export {
   method resourceType(--> 'Endpoint') {}
   has Str $.name;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
   has Str @.header;
   has ContactPoint @.contact;
@@ -2800,12 +2801,12 @@ class Endpoint is DomainResource is export {
   has Identifier @.identifier;
   has CodeableConcept @.payloadType is required;
   has Coding $.connectionType is required;
-  has Code @.payloadMimeType;
+  has FHIRCode @.payloadMimeType;
   has Reference $.managingOrganization;
 }
 class Encounter_Location is FHIR is export {
   has Str $.id;
-  has Code $.status;
+  has FHIRCode $.status;
   has Period $.period;
   has Reference $.location is required;
   has Extension @.extension;
@@ -2841,7 +2842,7 @@ class Encounter_ClassHistory is FHIR is export {
 
 class Encounter_StatusHistory is FHIR is export {
   has Str $.id;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -2866,7 +2867,7 @@ class Encounter is DomainResource is export {
   method resourceType(--> 'Encounter') {}
   has CodeableConcept @.type;
   has Coding $.class is required;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
   has Duration $.length;
   has Reference $.partOf;
@@ -2890,7 +2891,7 @@ class Encounter is DomainResource is export {
 }
 class Linkage_Item is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Reference $.resource is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -2957,7 +2958,7 @@ class Measure is DomainResource is export {
   has Str $.title;
   has Str $.usage;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -3006,13 +3007,13 @@ class Communication is DomainResource is export {
   has CodeableConcept $.topic;
   has Reference @.about;
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has CodeableConcept @.medium;
   has Reference $.sender;
   has Reference @.basedOn;
   has Reference $.subject;
   has CodeableConcept @.category;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has DateTime $.received;
   has Reference $.encounter;
   has Reference @.recipient;
@@ -3108,7 +3109,7 @@ class Immunization is DomainResource is export {
   has CodeableConcept $.site;
   has Annotation @.note;
   has CodeableConcept $.route;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.patient is required;
   has DateTime $.recorded;
   has Reference $.location;
@@ -3145,7 +3146,7 @@ class AuditEvent_Source is FHIR is export {
 
 class AuditEvent_Agent_Network is FHIR is export {
   has Str $.id;
-  has Code $.type;
+  has FHIRCode $.type;
   has Str $.address;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -3192,10 +3193,10 @@ class AuditEvent_Entity is FHIR is export {
 class AuditEvent is DomainResource is export {
   method resourceType(--> 'AuditEvent') {}
   has Coding $.type is required;
-  has Code $.action;
+  has FHIRCode $.action;
   has Period $.period;
   has Coding @.subtype;
-  has Code $.outcome;
+  has FHIRCode $.outcome;
   has DateTime $.recorded is required;
   has Str $.outcomeDesc;
   has CodeableConcept @.purposeOfEvent;
@@ -3205,7 +3206,7 @@ class AuditEvent is DomainResource is export {
 }
 class ImplementationGuide_Global is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Canonical $.profile is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -3254,7 +3255,7 @@ class ImplementationGuide_Definition_Page is FHIR is export {
   has Str $.title is required;
   has ChoiceField $.name is required where Reference|UrlStr;
   has Extension @.extension;
-  has Code $.generation is required;
+  has FHIRCode $.generation is required;
   has Extension @.modifierExtension;
 }
 
@@ -3273,14 +3274,14 @@ class ImplementationGuide_Definition_Resource is FHIR is export {
   has Reference $.reference is required;
   has ChoiceField $.example where Bool|Canonical;
   has Id $.groupingId;
-  has Code @.fhirVersion;
+  has FHIRCode @.fhirVersion;
   has Str $.description;
   has Extension @.modifierExtension;
 }
 
 class ImplementationGuide_Definition_Template is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Str $.scope;
   has Str $.source is required;
   has Extension @.extension;
@@ -3289,7 +3290,7 @@ class ImplementationGuide_Definition_Template is FHIR is export {
 
 class ImplementationGuide_Definition_Parameter is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Str $.value is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -3311,16 +3312,16 @@ class ImplementationGuide is DomainResource is export {
   has Str $.name is required;
   has DateTime $.date;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
-  has Code $.license;
+  has FHIRCode $.license;
   has Str $.publisher;
   has Markdown $.copyright;
   has Id $.packageId is required;
   has UsageContext @.useContext;
   has Markdown $.description;
-  has Code @.fhirVersion is required;
+  has FHIRCode @.fhirVersion is required;
   has Bool $.experimental;
   has CodeableConcept @.jurisdiction;
   has ImplementationGuide_Global @.global;
@@ -3337,7 +3338,7 @@ class ResearchDefinition is DomainResource is export {
   has Str $.title;
   has Str $.usage;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -3377,14 +3378,14 @@ class CommunicationRequest is DomainResource is export {
   method resourceType(--> 'CommunicationRequest') {}
   has Annotation @.note;
   has Reference @.about;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has CodeableConcept @.medium;
   has Reference $.sender;
   has Reference @.basedOn;
   has Reference $.subject;
   has Reference @.replaces;
   has CodeableConcept @.category;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Reference $.encounter;
   has Reference $.requester;
   has Reference @.recipient;
@@ -3402,7 +3403,7 @@ class Person_Link is FHIR is export {
   has Str $.id;
   has Reference $.target is required;
   has Extension @.extension;
-  has Code $.assurance;
+  has FHIRCode $.assurance;
   has Extension @.modifierExtension;
 }
 
@@ -3410,7 +3411,7 @@ class Person is DomainResource is export {
   method resourceType(--> 'Person') {}
   has HumanName @.name;
   has Attachment $.photo;
-  has Code $.gender;
+  has FHIRCode $.gender;
   has Bool $.active;
   has ContactPoint @.telecom;
   has Address @.address;
@@ -3421,7 +3422,7 @@ class Person is DomainResource is export {
 }
 class RequestGroup_Action_Condition is FHIR is export {
   has Str $.id;
-  has Code $.kind is required;
+  has FHIRCode $.kind is required;
   has Extension @.extension;
   has Expression $.expression;
   has Extension @.modifierExtension;
@@ -3432,7 +3433,7 @@ class RequestGroup_Action_RelatedAction is FHIR is export {
   has Id $.actionId is required;
   has Extension @.extension;
   has ChoiceField $.offset where Duration|Range;
-  has Code $.relationship is required;
+  has FHIRCode $.relationship is required;
   has Extension @.modifierExtension;
 }
 class RequestGroup_Action is FHIR is export {
@@ -3442,7 +3443,7 @@ class RequestGroup_Action is FHIR is export {
   has Str $.title;
   has Str $.prefix;
   has RequestGroup_Action @.action;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Reference $.resource;
   has Extension @.extension;
   has ChoiceField $.timing where Age|Duration|DateTime|Period|Range|Timing;
@@ -3450,12 +3451,12 @@ class RequestGroup_Action is FHIR is export {
   has Reference @.participant;
   has RelatedArtifact @.documentation;
   has Str $.textEquivalent;
-  has Code $.groupingBehavior;
-  has Code $.requiredBehavior;
-  has Code $.precheckBehavior;
+  has FHIRCode $.groupingBehavior;
+  has FHIRCode $.requiredBehavior;
+  has FHIRCode $.precheckBehavior;
   has Extension @.modifierExtension;
-  has Code $.selectionBehavior;
-  has Code $.cardinalityBehavior;
+  has FHIRCode $.selectionBehavior;
+  has FHIRCode $.cardinalityBehavior;
   has RequestGroup_Action_Condition @.condition;
   has RequestGroup_Action_RelatedAction @.relatedAction;
 }
@@ -3464,13 +3465,13 @@ class RequestGroup is DomainResource is export {
   method resourceType(--> 'RequestGroup') {}
   has CodeableConcept $.code;
   has Annotation @.note;
-  has Code $.status is required;
-  has Code $.intent is required;
+  has FHIRCode $.status is required;
+  has FHIRCode $.intent is required;
   has Reference $.author;
   has Reference @.basedOn;
   has Reference $.subject;
   has Reference @.replaces;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Reference $.encounter;
   has Identifier @.identifier;
   has DateTime $.authoredOn;
@@ -3493,7 +3494,7 @@ class DeviceDefinition_Property is FHIR is export {
 class DeviceDefinition_DeviceName is FHIR is export {
   has Str $.id;
   has Str $.name is required;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -3559,7 +3560,7 @@ class DeviceDefinition is DomainResource is export {
 }
 class CompartmentDefinition_Resource is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Str @.param;
   has Extension @.extension;
   has Str $.documentation;
@@ -3571,8 +3572,8 @@ class CompartmentDefinition is DomainResource is export {
   has UriStr $.url is required;
   has Str $.name is required;
   has DateTime $.date;
-  has Code $.code is required;
-  has Code $.status is required;
+  has FHIRCode $.code is required;
+  has FHIRCode $.status is required;
   has Bool $.search is required;
   has Str $.version;
   has ContactDetail @.contact;
@@ -3601,7 +3602,7 @@ class PaymentReconciliation_Detail is FHIR is export {
 
 class PaymentReconciliation_ProcessNote is FHIR is export {
   has Str $.id;
-  has Code $.type;
+  has FHIRCode $.type;
   has Str $.text;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -3609,11 +3610,11 @@ class PaymentReconciliation_ProcessNote is FHIR is export {
 
 class PaymentReconciliation is DomainResource is export {
   method resourceType(--> 'PaymentReconciliation') {}
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
   has DateTime $.created is required;
   has Reference $.request;
-  has Code $.outcome;
+  has FHIRCode $.outcome;
   has CodeableConcept $.formCode;
   has Reference $.requestor;
   has Identifier @.identifier;
@@ -3759,7 +3760,7 @@ class MedicationKnowledge_AdministrationGuidelines is FHIR is export {
 class MedicationKnowledge is DomainResource is export {
   method resourceType(--> 'MedicationKnowledge') {}
   has CodeableConcept $.code;
-  has Code $.status;
+  has FHIRCode $.status;
   has Quantity $.amount;
   has Str @.synonym;
   has CodeableConcept $.doseForm;
@@ -3786,7 +3787,7 @@ class Slot is DomainResource is export {
   method resourceType(--> 'Slot') {}
   has DateTime $.end is required;
   has DateTime $.start is required;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.comment;
   has Reference $.schedule is required;
   has CodeableConcept @.specialty;
@@ -3801,7 +3802,7 @@ class MedicationStatement is DomainResource is export {
   method resourceType(--> 'MedicationStatement') {}
   has Annotation @.note;
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Dosage @.dosage;
   has Reference @.basedOn;
   has Reference $.subject is required;
@@ -3828,7 +3829,7 @@ class DiagnosticReport_Media is FHIR is export {
 class DiagnosticReport is DomainResource is export {
   method resourceType(--> 'DiagnosticReport') {}
   has CodeableConcept $.code is required;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has DateTime $.issued;
   has Reference @.result;
   has Reference @.basedOn;
@@ -3880,7 +3881,7 @@ class SpecimenDefinition_TypeTested is FHIR is export {
   has CodeableConcept $.type;
   has Extension @.extension;
   has Bool $.isDerived;
-  has Code $.preference is required;
+  has FHIRCode $.preference is required;
   has Str $.requirement;
   has Duration $.retentionTime;
   has Extension @.modifierExtension;
@@ -4032,7 +4033,7 @@ class EpisodeOfCare_Diagnosis is FHIR is export {
 
 class EpisodeOfCare_StatusHistory is FHIR is export {
   has Str $.id;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -4042,7 +4043,7 @@ class EpisodeOfCare is DomainResource is export {
   method resourceType(--> 'EpisodeOfCare') {}
   has CodeableConcept @.type;
   has Reference @.team;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
   has Reference $.patient is required;
   has Reference @.account;
@@ -4064,10 +4065,10 @@ class ResearchElementDefinition_Characteristic is FHIR is export {
   has ChoiceField $.studyEffective where Duration|DateTime|Period|Timing;
   has ChoiceField $.participantEffective where Duration|DateTime|Period|Timing;
   has Str $.studyEffectiveDescription;
-  has Code $.studyEffectiveGroupMeasure;
+  has FHIRCode $.studyEffectiveGroupMeasure;
   has Duration $.studyEffectiveTimeFromStart;
   has Str $.participantEffectiveDescription;
-  has Code $.participantEffectiveGroupMeasure;
+  has FHIRCode $.participantEffectiveGroupMeasure;
   has Duration $.participantEffectiveTimeFromStart;
 }
 
@@ -4076,11 +4077,11 @@ class ResearchElementDefinition is DomainResource is export {
   has UriStr $.url;
   has Str $.name;
   has DateTime $.date;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.title;
   has Str $.usage;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -4101,7 +4102,7 @@ class ResearchElementDefinition is DomainResource is export {
   has Bool $.experimental;
   has CodeableConcept @.jurisdiction;
   has Date $.approvalDate;
-  has Code $.variableType;
+  has FHIRCode $.variableType;
   has Date $.lastReviewDate;
   has Period $.effectivePeriod;
   has RelatedArtifact @.relatedArtifact;
@@ -4129,7 +4130,7 @@ class Account is DomainResource is export {
   has CodeableConcept $.type;
   has Str $.name;
   has Reference $.owner;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.partOf;
   has Reference @.subject;
   has Identifier @.identifier;
@@ -4149,7 +4150,7 @@ class ChargeItemDefinition_Applicability is FHIR is export {
 
 class ChargeItemDefinition_PropertyGroup_PriceComponent is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has CodeableConcept $.code;
   has Real $.factor;
   has Money $.amount;
@@ -4171,7 +4172,7 @@ class ChargeItemDefinition is DomainResource is export {
   has CodeableConcept $.code;
   has Str $.title;
   has Canonical @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Canonical @.replaces;
@@ -4204,7 +4205,7 @@ class CareTeam is DomainResource is export {
   method resourceType(--> 'CareTeam') {}
   has Str $.name;
   has Annotation @.note;
-  has Code $.status;
+  has FHIRCode $.status;
   has Period $.period;
   has Reference $.subject;
   has ContactPoint @.telecom;
@@ -4218,7 +4219,7 @@ class CareTeam is DomainResource is export {
 }
 class NamingSystem_UniqueId is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.value is required;
   has Period $.period;
   has Str $.comment;
@@ -4230,11 +4231,11 @@ class NamingSystem_UniqueId is FHIR is export {
 class NamingSystem is DomainResource is export {
   method resourceType(--> 'NamingSystem') {}
   has Str $.name is required;
-  has Code $.kind is required;
+  has FHIRCode $.kind is required;
   has DateTime $.date is required;
   has CodeableConcept $.type;
   has Str $.usage;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.contact;
   has Str $.publisher;
   has UsageContext @.useContext;
@@ -4254,12 +4255,12 @@ class DeviceRequest_Parameter is FHIR is export {
 class DeviceRequest is DomainResource is export {
   method resourceType(--> 'DeviceRequest') {}
   has Annotation @.note;
-  has Code $.status;
-  has Code $.intent is required;
+  has FHIRCode $.status;
+  has FHIRCode $.intent is required;
   has Reference @.basedOn;
   has ChoiceField $.code is required where CodeableConcept|Reference;
   has Reference $.subject is required;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Reference $.encounter;
   has Reference $.requester;
   has Reference $.performer;
@@ -4299,7 +4300,7 @@ class QuestionnaireResponse_Item is FHIR is export {
 class QuestionnaireResponse is DomainResource is export {
   method resourceType(--> 'QuestionnaireResponse') {}
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.author;
   has Reference $.source;
   has Reference @.basedOn;
@@ -4312,9 +4313,9 @@ class QuestionnaireResponse is DomainResource is export {
 }
 class CodeSystem_Filter is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Str $.value is required;
-  has Code @.operator is required;
+  has FHIRCode @.operator is required;
   has Extension @.extension;
   has Str $.description;
   has Extension @.modifierExtension;
@@ -4323,8 +4324,8 @@ class CodeSystem_Filter is FHIR is export {
 class CodeSystem_Property is FHIR is export {
   has Str $.id;
   has UriStr $.uri;
-  has Code $.code is required;
-  has Code $.type is required;
+  has FHIRCode $.code is required;
+  has FHIRCode $.type is required;
   has Extension @.extension;
   has Str $.description;
   has Extension @.modifierExtension;
@@ -4332,8 +4333,8 @@ class CodeSystem_Property is FHIR is export {
 
 class CodeSystem_Concept_Property is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
-  has ChoiceField $.value is required where Bool|Code|Coding|Real|DateTime|Int|Str;
+  has FHIRCode $.code is required;
+  has ChoiceField $.value is required where Bool|FHIRCode|Coding|Real|DateTime|Int|Str;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -4342,13 +4343,13 @@ class CodeSystem_Concept_Designation is FHIR is export {
   has Str $.id;
   has Coding $.use;
   has Str $.value is required;
-  has Code $.language;
+  has FHIRCode $.language;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
 class CodeSystem_Concept is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Str $.display;
   has CodeSystem_Concept @.concept;
   has Extension @.extension;
@@ -4365,11 +4366,11 @@ class CodeSystem is DomainResource is export {
   has DateTime $.date;
   has Str $.title;
   has UnsignedInt $.count;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
-  has Code $.content is required;
+  has FHIRCode $.content is required;
   has Canonical $.valueSet;
   has Str $.publisher;
   has Markdown $.copyright;
@@ -4382,7 +4383,7 @@ class CodeSystem is DomainResource is export {
   has Bool $.caseSensitive;
   has Bool $.compositional;
   has Bool $.versionNeeded;
-  has Code $.hierarchyMeaning;
+  has FHIRCode $.hierarchyMeaning;
   has CodeSystem_Filter @.filter;
   has CodeSystem_Property @.property;
   has CodeSystem_Concept @.concept;
@@ -4538,7 +4539,7 @@ class MolecularSequence_Variant is FHIR is export {
 class MolecularSequence_Repository is FHIR is export {
   has Str $.id;
   has UriStr $.url;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.name;
   has Extension @.extension;
   has Str $.datasetId;
@@ -4562,7 +4563,7 @@ class MolecularSequence_Quality_Roc is FHIR is export {
 class MolecularSequence_Quality is FHIR is export {
   has Str $.id;
   has Int $.end;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Real $.gtFP;
   has Int $.start;
   has Quantity $.score;
@@ -4582,12 +4583,12 @@ class MolecularSequence_Quality is FHIR is export {
 
 class MolecularSequence_ReferenceSeq is FHIR is export {
   has Str $.id;
-  has Code $.strand;
+  has FHIRCode $.strand;
   has Extension @.extension;
   has Int $.windowEnd;
   has CodeableConcept $.chromosome;
   has Str $.genomeBuild;
-  has Code $.orientation;
+  has FHIRCode $.orientation;
   has Int $.windowStart;
   has CodeableConcept $.referenceSeqId;
   has Extension @.modifierExtension;
@@ -4623,7 +4624,7 @@ class MolecularSequence_StructureVariant is FHIR is export {
 
 class MolecularSequence is DomainResource is export {
   method resourceType(--> 'MolecularSequence') {}
-  has Code $.type;
+  has FHIRCode $.type;
   has Reference $.device;
   has Reference $.patient;
   has Reference @.pointer;
@@ -4687,12 +4688,12 @@ class CoverageEligibilityResponse_Insurance is FHIR is export {
 class CoverageEligibilityResponse is DomainResource is export {
   method resourceType(--> 'CoverageEligibilityResponse') {}
   has CodeableConcept $.form;
-  has Code $.status is required;
-  has Code @.purpose is required;
+  has FHIRCode $.status is required;
+  has FHIRCode @.purpose is required;
   has Reference $.patient is required;
   has DateTime $.created is required;
   has Reference $.request is required;
-  has Code $.outcome is required;
+  has FHIRCode $.outcome is required;
   has Reference $.insurer is required;
   has Reference $.requestor;
   has Identifier @.identifier;
@@ -4712,7 +4713,7 @@ class Library is DomainResource is export {
   has Str $.title;
   has Str $.usage;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -4756,7 +4757,7 @@ class Consent_Verification is FHIR is export {
 
 class Consent_Provision_Data is FHIR is export {
   has Str $.id;
-  has Code $.meaning is required;
+  has FHIRCode $.meaning is required;
   has Extension @.extension;
   has Reference $.reference is required;
   has Extension @.modifierExtension;
@@ -4771,7 +4772,7 @@ class Consent_Provision_Actor is FHIR is export {
 }
 class Consent_Provision is FHIR is export {
   has Str $.id;
-  has Code $.type;
+  has FHIRCode $.type;
   has CodeableConcept @.code;
   has Coding @.class;
   has Period $.period;
@@ -4789,7 +4790,7 @@ class Consent_Provision is FHIR is export {
 class Consent is DomainResource is export {
   method resourceType(--> 'Consent') {}
   has CodeableConcept $.scope is required;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.patient;
   has CodeableConcept @.category is required;
   has DateTime $.dateTime;
@@ -4890,7 +4891,7 @@ class InsurancePlan is DomainResource is export {
   has CodeableConcept @.type;
   has Str $.name;
   has Str @.alias;
-  has Code $.status;
+  has FHIRCode $.status;
   has Period $.period;
   has Reference $.ownedBy;
   has Reference @.network;
@@ -4910,7 +4911,7 @@ class Media is DomainResource is export {
   has Annotation @.note;
   has PositiveInt $.width;
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has DateTime $.issued;
   has Reference $.device;
   has PositiveInt $.height;
@@ -4939,7 +4940,7 @@ class CapabilityStatement_Software is FHIR is export {
 
 class CapabilityStatement_Document is FHIR is export {
   has Str $.id;
-  has Code $.mode is required;
+  has FHIRCode $.mode is required;
   has Canonical $.profile is required;
   has Extension @.extension;
   has Markdown $.documentation;
@@ -4966,7 +4967,7 @@ class CapabilityStatement_Rest_Security is FHIR is export {
 
 class CapabilityStatement_Rest_Interaction is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Extension @.extension;
   has Markdown $.documentation;
   has Extension @.modifierExtension;
@@ -4983,7 +4984,7 @@ class CapabilityStatement_Rest_Resource_Operation is FHIR is export {
 
 class CapabilityStatement_Rest_Resource_Interaction is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Extension @.extension;
   has Markdown $.documentation;
   has Extension @.modifierExtension;
@@ -4992,7 +4993,7 @@ class CapabilityStatement_Rest_Resource_Interaction is FHIR is export {
 class CapabilityStatement_Rest_Resource_SearchParam is FHIR is export {
   has Str $.id;
   has Str $.name is required;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Extension @.extension;
   has Canonical $.definition;
   has Markdown $.documentation;
@@ -5000,29 +5001,29 @@ class CapabilityStatement_Rest_Resource_SearchParam is FHIR is export {
 }
 class CapabilityStatement_Rest_Resource is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Canonical $.profile;
   has Extension @.extension;
-  has Code $.versioning;
+  has FHIRCode $.versioning;
   has Bool $.readHistory;
   has Bool $.updateCreate;
   has Markdown $.documentation;
   has Str @.searchInclude;
-  has Code $.conditionalRead;
-  has Code @.referencePolicy;
+  has FHIRCode $.conditionalRead;
+  has FHIRCode @.referencePolicy;
   has Canonical @.supportedProfile;
   has Str @.searchRevInclude;
   has Extension @.modifierExtension;
   has Bool $.conditionalCreate;
   has Bool $.conditionalUpdate;
-  has Code $.conditionalDelete;
+  has FHIRCode $.conditionalDelete;
   has CapabilityStatement_Rest_Resource_Operation @.operation;
   has CapabilityStatement_Rest_Resource_Interaction @.interaction;
   has CapabilityStatement_Rest_Resource_SearchParam @.searchParam;
 }
 class CapabilityStatement_Rest is FHIR is export {
   has Str $.id;
-  has Code $.mode is required;
+  has FHIRCode $.mode is required;
   has Extension @.extension;
   has CapabilityStatement_Rest_Resource_Operation @.operation;
   has CapabilityStatement_Rest_Resource_SearchParam @.searchParam;
@@ -5044,7 +5045,7 @@ class CapabilityStatement_Messaging_Endpoint is FHIR is export {
 
 class CapabilityStatement_Messaging_SupportedMessage is FHIR is export {
   has Str $.id;
-  has Code $.mode is required;
+  has FHIRCode $.mode is required;
   has Extension @.extension;
   has Canonical $.definition is required;
   has Extension @.modifierExtension;
@@ -5064,10 +5065,10 @@ class CapabilityStatement is DomainResource is export {
   has UriStr $.url;
   has Str $.name;
   has DateTime $.date is required;
-  has Code $.kind is required;
+  has FHIRCode $.kind is required;
   has Str $.title;
-  has Code $.status is required;
-  has Code @.format is required;
+  has FHIRCode $.status is required;
+  has FHIRCode @.format is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -5076,8 +5077,8 @@ class CapabilityStatement is DomainResource is export {
   has Markdown $.copyright;
   has UsageContext @.useContext;
   has Markdown $.description;
-  has Code $.fhirVersion is required;
-  has Code @.patchFormat;
+  has FHIRCode $.fhirVersion is required;
+  has FHIRCode @.patchFormat;
   has Bool $.experimental;
   has CodeableConcept @.jurisdiction;
   has Canonical @.instantiates;
@@ -5090,9 +5091,9 @@ class CapabilityStatement is DomainResource is export {
 }
 class GraphDefinition_Link_Target_Compartment is FHIR is export {
   has Str $.id;
-  has Code $.use is required;
-  has Code $.code is required;
-  has Code $.rule is required;
+  has FHIRCode $.use is required;
+  has FHIRCode $.code is required;
+  has FHIRCode $.rule is required;
   has Extension @.extension;
   has Str $.expression;
   has Str $.description;
@@ -5100,7 +5101,7 @@ class GraphDefinition_Link_Target_Compartment is FHIR is export {
 }
 class GraphDefinition_Link_Target is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has GraphDefinition_Link @.link;
   has Str $.params;
   has Canonical $.profile;
@@ -5125,8 +5126,8 @@ class GraphDefinition is DomainResource is export {
   has UriStr $.url;
   has Str $.name is required;
   has DateTime $.date;
-  has Code $.start is required;
-  has Code $.status is required;
+  has FHIRCode $.start is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -5180,8 +5181,8 @@ class CoverageEligibilityRequest_Item is FHIR is export {
 
 class CoverageEligibilityRequest is DomainResource is export {
   method resourceType(--> 'CoverageEligibilityRequest') {}
-  has Code $.status is required;
-  has Code @.purpose is required;
+  has FHIRCode $.status is required;
+  has FHIRCode @.purpose is required;
   has Reference $.patient is required;
   has DateTime $.created is required;
   has Reference $.enterer;
@@ -5207,7 +5208,7 @@ class PractitionerRole_AvailableTime is FHIR is export {
   has Str $.id;
   has Bool $.allDay;
   has Extension @.extension;
-  has Code @.daysOfWeek;
+  has FHIRCode @.daysOfWeek;
   has Instant $.availableEndTime;
   has Extension @.modifierExtension;
   has Instant $.availableStartTime;
@@ -5320,7 +5321,7 @@ class ExplanationOfBenefit_Insurance is FHIR is export {
 
 class ExplanationOfBenefit_ProcessNote is FHIR is export {
   has Str $.id;
-  has Code $.type;
+  has FHIRCode $.type;
   has Str $.text;
   has PositiveInt $.number;
   has CodeableConcept $.language;
@@ -5491,17 +5492,17 @@ class ExplanationOfBenefit_BenefitBalance is FHIR is export {
 
 class ExplanationOfBenefit is DomainResource is export {
   method resourceType(--> 'ExplanationOfBenefit') {}
-  has Code $.use is required;
+  has FHIRCode $.use is required;
   has CodeableConcept $.type is required;
   has Attachment $.form;
   has Reference $.claim;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has CodeableConcept $.subType;
   has Reference $.patient is required;
   has DateTime $.created is required;
   has Reference $.enterer;
   has Reference $.insurer is required;
-  has Code $.outcome is required;
+  has FHIRCode $.outcome is required;
   has Reference $.provider is required;
   has CodeableConcept $.priority;
   has Reference $.referral;
@@ -5537,14 +5538,14 @@ class ExplanationOfBenefit is DomainResource is export {
 }
 class VisionPrescription_LensSpecification_Prism is FHIR is export {
   has Str $.id;
-  has Code $.base is required;
+  has FHIRCode $.base is required;
   has Real $.amount is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
 class VisionPrescription_LensSpecification is FHIR is export {
   has Str $.id;
-  has Code $.eye is required;
+  has FHIRCode $.eye is required;
   has Real $.add;
   has Int $.axis;
   has Annotation @.note;
@@ -5564,7 +5565,7 @@ class VisionPrescription_LensSpecification is FHIR is export {
 
 class VisionPrescription is DomainResource is export {
   method resourceType(--> 'VisionPrescription') {}
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has DateTime $.created is required;
   has Reference $.patient is required;
   has Reference $.encounter;
@@ -5576,7 +5577,7 @@ class VisionPrescription is DomainResource is export {
 
 class EnrollmentRequest is DomainResource is export {
   method resourceType(--> 'EnrollmentRequest') {}
-  has Code $.status;
+  has FHIRCode $.status;
   has DateTime $.created;
   has Reference $.insurer;
   has Reference $.provider;
@@ -5730,10 +5731,10 @@ class Claim_Item is FHIR is export {
 
 class Claim is DomainResource is export {
   method resourceType(--> 'Claim') {}
-  has Code $.use is required;
+  has FHIRCode $.use is required;
   has CodeableConcept $.type is required;
   has Money $.total;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has CodeableConcept $.subType;
   has Reference $.patient is required;
   has DateTime $.created is required;
@@ -5845,7 +5846,7 @@ class ImagingStudy_Series is FHIR is export {
 class ImagingStudy is DomainResource is export {
   method resourceType(--> 'ImagingStudy') {}
   has Annotation @.note;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.subject is required;
   has DateTime $.started;
   has Reference @.basedOn;
@@ -5894,7 +5895,7 @@ class HealthcareService_AvailableTime is FHIR is export {
   has Str $.id;
   has Bool $.allDay;
   has Extension @.extension;
-  has Code @.daysOfWeek;
+  has FHIRCode @.daysOfWeek;
   has Instant $.availableEndTime;
   has Extension @.modifierExtension;
   has Instant $.availableStartTime;
@@ -5939,12 +5940,12 @@ class List_Entry is FHIR is export {
 
 class List is DomainResource is export {
   method resourceType(--> 'List') {}
-  has Code $.mode is required;
+  has FHIRCode $.mode is required;
   has CodeableConcept $.code;
   has DateTime $.date;
   has Annotation @.note;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.source;
   has Reference $.subject;
   has Reference $.encounter;
@@ -5994,7 +5995,7 @@ class EffectEvidenceSynthesis_ResultsByExposure is FHIR is export {
   has Extension @.extension;
   has Str $.description;
   has CodeableConcept $.variantState;
-  has Code $.exposureState;
+  has FHIRCode $.exposureState;
   has Extension @.modifierExtension;
   has Reference $.riskEvidenceSynthesis is required;
 }
@@ -6045,7 +6046,7 @@ class EffectEvidenceSynthesis is DomainResource is export {
   has Annotation @.note;
   has Str $.title;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -6181,7 +6182,7 @@ class Coverage is DomainResource is export {
   has CodeableConcept $.type;
   has Reference @.payor is required;
   has PositiveInt $.order;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
   has Str $.network;
   has Reference @.contract;
@@ -6238,14 +6239,14 @@ class CatalogEntry_RelatedEntry is FHIR is export {
   has Str $.id;
   has Reference $.item is required;
   has Extension @.extension;
-  has Code $.relationtype is required;
+  has FHIRCode $.relationtype is required;
   has Extension @.modifierExtension;
 }
 
 class CatalogEntry is DomainResource is export {
   method resourceType(--> 'CatalogEntry') {}
   has CodeableConcept $.type;
-  has Code $.status;
+  has FHIRCode $.status;
   has DateTime $.validTo;
   has Bool $.orderable is required;
   has Identifier @.identifier;
@@ -6292,7 +6293,7 @@ class Procedure is DomainResource is export {
   has CodeableConcept $.code;
   has Annotation @.note;
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference @.report;
   has Reference @.basedOn;
   has Reference $.subject is required;
@@ -6328,7 +6329,7 @@ class Invoice_Participant is FHIR is export {
 
 class Invoice_LineItem_PriceComponent is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has CodeableConcept $.code;
   has Real $.factor;
   has Money $.amount;
@@ -6349,7 +6350,7 @@ class Invoice is DomainResource is export {
   has CodeableConcept $.type;
   has DateTime $.date;
   has Annotation @.note;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.issuer;
   has Reference $.subject;
   has Reference $.account;
@@ -6385,9 +6386,9 @@ class Appointment_Participant is FHIR is export {
   has Str $.id;
   has CodeableConcept @.type;
   has Reference $.actor;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
-  has Code $.required;
+  has FHIRCode $.required;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -6397,7 +6398,7 @@ class Appointment is DomainResource is export {
   has DateTime $.end;
   has Reference @.slot;
   has DateTime $.start;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has DateTime $.created;
   has Str $.comment;
   has Reference @.basedOn;
@@ -6425,7 +6426,7 @@ class Age is Quantity is export {
 class Flag is DomainResource is export {
   method resourceType(--> 'Flag') {}
   has CodeableConcept $.code is required;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
   has Reference $.author;
   has Reference $.subject is required;
@@ -6437,7 +6438,7 @@ class Flag is DomainResource is export {
 class ResearchSubject is DomainResource is export {
   method resourceType(--> 'ResearchSubject') {}
   has Reference $.study is required;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
   has Reference $.consent;
   has Str $.actualArm;
@@ -6515,7 +6516,7 @@ class Medication is DomainResource is export {
   method resourceType(--> 'Medication') {}
   has CodeableConcept $.code;
   has CodeableConcept $.form;
-  has Code $.status;
+  has FHIRCode $.status;
   has Ratio $.amount;
   has Identifier @.identifier;
   has Reference $.manufacturer;
@@ -6528,7 +6529,7 @@ class VerificationResult_Validator is FHIR is export {
   has Reference $.organization is required;
   has Extension @.modifierExtension;
   has Str $.identityCertificate;
-  has Signature $.attestationSignature;
+  has FHIRSignature $.attestationSignature;
 }
 
 class VerificationResult_PrimarySource is FHIR is export {
@@ -6550,8 +6551,8 @@ class VerificationResult_Attestation is FHIR is export {
   has Date $.date;
   has Extension @.extension;
   has Reference $.onBehalfOf;
-  has Signature $.proxySignature;
-  has Signature $.sourceSignature;
+  has FHIRSignature $.proxySignature;
+  has FHIRSignature $.sourceSignature;
   has Extension @.modifierExtension;
   has CodeableConcept $.communicationMethod;
   has Str $.proxyIdentityCertificate;
@@ -6562,7 +6563,7 @@ class VerificationResult is DomainResource is export {
   method resourceType(--> 'VerificationResult') {}
   has CodeableConcept $.need;
   has Reference @.target;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Timing $.frequency;
   has DateTime $.statusDate;
   has DateTime $.lastPerformed;
@@ -6596,7 +6597,7 @@ class Group_Characteristic is FHIR is export {
 
 class Group is DomainResource is export {
   method resourceType(--> 'Group') {}
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has CodeableConcept $.code;
   has Str $.name;
   has Bool $.active;
@@ -6617,10 +6618,10 @@ class SupplyRequest_Parameter is FHIR is export {
 
 class SupplyRequest is DomainResource is export {
   method resourceType(--> 'SupplyRequest') {}
-  has Code $.status;
+  has FHIRCode $.status;
   has ChoiceField $.item is required where CodeableConcept|Reference;
   has CodeableConcept $.category;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Quantity $.quantity is required;
   has Reference @.supplier;
   has Reference $.requester;
@@ -6646,7 +6647,7 @@ class Composition_Section is FHIR is export {
   has Str $.id;
   has CodeableConcept $.code;
   has Narrative $.text;
-  has Code $.mode;
+  has FHIRCode $.mode;
   has Str $.title;
   has Reference $.focus;
   has Reference @.entry;
@@ -6660,7 +6661,7 @@ class Composition_Section is FHIR is export {
 
 class Composition_Attester is FHIR is export {
   has Str $.id;
-  has Code $.mode is required;
+  has FHIRCode $.mode is required;
   has DateTime $.time;
   has Reference $.party;
   has Extension @.extension;
@@ -6669,7 +6670,7 @@ class Composition_Attester is FHIR is export {
 
 class Composition_RelatesTo is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Extension @.extension;
   has ChoiceField $.target is required where Identifier|Reference;
   has Extension @.modifierExtension;
@@ -6680,14 +6681,14 @@ class Composition is DomainResource is export {
   has CodeableConcept $.type is required;
   has DateTime $.date is required;
   has Str $.title is required;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference @.author is required;
   has Reference $.subject;
   has CodeableConcept @.category;
   has Reference $.encounter;
   has Reference $.custodian;
   has Identifier $.identifier;
-  has Code $.confidentiality;
+  has FHIRCode $.confidentiality;
   has Composition_Event @.event;
   has Composition_Section @.section;
   has Composition_Attester @.attester;
@@ -6704,7 +6705,7 @@ class DocumentManifest_Related is FHIR is export {
 class DocumentManifest is DomainResource is export {
   method resourceType(--> 'DocumentManifest') {}
   has CodeableConcept $.type;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference @.author;
   has UriStr $.source;
   has Reference $.subject;
@@ -6718,9 +6719,9 @@ class DocumentManifest is DomainResource is export {
 }
 class DeviceMetric_Calibration is FHIR is export {
   has Str $.id;
-  has Code $.type;
+  has FHIRCode $.type;
   has DateTime $.time;
-  has Code $.state;
+  has FHIRCode $.state;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -6729,12 +6730,12 @@ class DeviceMetric is DomainResource is export {
   method resourceType(--> 'DeviceMetric') {}
   has CodeableConcept $.type is required;
   has CodeableConcept $.unit;
-  has Code $.color;
+  has FHIRCode $.color;
   has Reference $.source;
   has Reference $.parent;
-  has Code $.category is required;
+  has FHIRCode $.category is required;
   has Identifier @.identifier;
-  has Code $.operationalStatus;
+  has FHIRCode $.operationalStatus;
   has Timing $.measurementPeriod;
   has DeviceMetric_Calibration @.calibration;
 }
@@ -6755,7 +6756,7 @@ class RelatedPerson is DomainResource is export {
   has HumanName @.name;
   has Attachment @.photo;
   has Bool $.active;
-  has Code $.gender;
+  has FHIRCode $.gender;
   has Period $.period;
   has Reference $.patient is required;
   has ContactPoint @.telecom;
@@ -6769,7 +6770,7 @@ class RelatedPerson is DomainResource is export {
 class DeviceUseStatement is DomainResource is export {
   method resourceType(--> 'DeviceUseStatement') {}
   has Annotation @.note;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Reference $.source;
   has Reference $.device is required;
   has Reference @.basedOn;
@@ -6846,8 +6847,8 @@ class NutritionOrder_EnteralFormula is FHIR is export {
 class NutritionOrder is DomainResource is export {
   method resourceType(--> 'NutritionOrder') {}
   has Annotation @.note;
-  has Code $.status is required;
-  has Code $.intent is required;
+  has FHIRCode $.status is required;
+  has FHIRCode $.intent is required;
   has Reference $.patient is required;
   has Reference $.orderer;
   has DateTime $.dateTime is required;
@@ -6873,7 +6874,7 @@ class Questionnaire_Item_Initial is FHIR is export {
 class Questionnaire_Item_EnableWhen is FHIR is export {
   has Str $.id;
   has Str $.question is required;
-  has Code $.operator is required;
+  has FHIRCode $.operator is required;
   has Extension @.extension;
   has ChoiceField $.answer is required where Bool|Coding|Real|Date|DateTime|Int|Instant|Quantity|Reference|Str;
   has Extension @.modifierExtension;
@@ -6890,7 +6891,7 @@ class Questionnaire_Item is FHIR is export {
   has Str $.id;
   has Coding @.code;
   has Str $.text;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Questionnaire_Item @.item;
   has Str $.linkId is required;
   has Str $.prefix;
@@ -6900,7 +6901,7 @@ class Questionnaire_Item is FHIR is export {
   has Extension @.extension;
   has Int $.maxLength;
   has UriStr $.definition;
-  has Code $.enableBehavior;
+  has FHIRCode $.enableBehavior;
   has Canonical $.answerValueSet;
   has Extension @.modifierExtension;
   has Questionnaire_Item_Initial @.initial;
@@ -6915,7 +6916,7 @@ class Questionnaire is DomainResource is export {
   has DateTime $.date;
   has Coding @.code;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -6924,7 +6925,7 @@ class Questionnaire is DomainResource is export {
   has Identifier @.identifier;
   has UsageContext @.useContext;
   has Canonical @.derivedFrom;
-  has Code @.subjectType;
+  has FHIRCode @.subjectType;
   has Markdown $.description;
   has Bool $.experimental;
   has CodeableConcept @.jurisdiction;
@@ -6992,7 +6993,7 @@ class Specimen is DomainResource is export {
   method resourceType(--> 'Specimen') {}
   has CodeableConcept $.type;
   has Annotation @.note;
-  has Code $.status;
+  has FHIRCode $.status;
   has Reference @.parent;
   has Reference $.subject;
   has Reference @.request;
@@ -7057,9 +7058,9 @@ class MeasureReport_Group is FHIR is export {
 
 class MeasureReport is DomainResource is export {
   method resourceType(--> 'MeasureReport') {}
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has DateTime $.date;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period is required;
   has Canonical $.measure is required;
   has Reference $.subject;
@@ -7095,8 +7096,8 @@ class Dosage is BackboneElement is export {
 class ConceptMap_Group_Unmapped is FHIR is export {
   has Str $.id;
   has Canonical $.url;
-  has Code $.mode is required;
-  has Code $.code;
+  has FHIRCode $.mode is required;
+  has FHIRCode $.code;
   has Str $.display;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -7113,18 +7114,18 @@ class ConceptMap_Group_Element_Target_DependsOn is FHIR is export {
 }
 class ConceptMap_Group_Element_Target is FHIR is export {
   has Str $.id;
-  has Code $.code;
+  has FHIRCode $.code;
   has Str $.display;
   has Str $.comment;
   has ConceptMap_Group_Element_Target_DependsOn @.product;
   has Extension @.extension;
-  has Code $.equivalence is required;
+  has FHIRCode $.equivalence is required;
   has Extension @.modifierExtension;
   has ConceptMap_Group_Element_Target_DependsOn @.dependsOn;
 }
 class ConceptMap_Group_Element is Element is export {
   has Str $.id;
-  has Code $.code;
+  has FHIRCode $.code;
   has Str $.display;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -7148,7 +7149,7 @@ class ConceptMap is DomainResource is export {
   has Str $.name;
   has DateTime $.date;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -7188,7 +7189,7 @@ class ResearchStudy is DomainResource is export {
   has CodeableConcept $.phase;
   has CodeableConcept @.focus;
   has Reference @.partOf;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Period $.period;
   has ContactDetail @.contact;
   has CodeableConcept @.keyword;
@@ -7209,7 +7210,7 @@ class ResearchStudy is DomainResource is export {
 }
 class ActivityDefinition_Participant is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has CodeableConcept $.role;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -7228,15 +7229,15 @@ class ActivityDefinition is DomainResource is export {
   has UriStr $.url;
   has Str $.name;
   has DateTime $.date;
-  has Code $.kind;
+  has FHIRCode $.kind;
   has CodeableConcept $.code;
   has Str $.title;
   has Str $.usage;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
-  has Code $.intent;
+  has FHIRCode $.intent;
   has Dosage @.dosage;
   has Str $.version;
   has ContactDetail @.contact;
@@ -7246,7 +7247,7 @@ class ActivityDefinition is DomainResource is export {
   has Str $.subtitle;
   has ContactDetail @.reviewer;
   has ContactDetail @.endorser;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Reference $.location;
   has Quantity $.quantity;
   has CodeableConcept @.bodySite;
@@ -7291,7 +7292,7 @@ class Contract_Signer is FHIR is export {
   has Coding $.type is required;
   has Reference $.party is required;
   has Extension @.extension;
-  has Signature @.signature is required;
+  has FHIRSignature @.signature is required;
   has Extension @.modifierExtension;
 }
 
@@ -7311,7 +7312,7 @@ class Contract_ContentDefinition is FHIR is export {
   has Markdown $.copyright;
   has DateTime $.publicationDate;
   has Extension @.modifierExtension;
-  has Code $.publicationStatus is required;
+  has FHIRCode $.publicationStatus is required;
 }
 
 class Contract_Term_Offer_Party is FHIR is export {
@@ -7463,7 +7464,7 @@ class Contract is DomainResource is export {
   has Str $.title;
   has Str @.alias;
   has CodeableConcept $.scope;
-  has Code $.status;
+  has FHIRCode $.status;
   has DateTime $.issued;
   has Reference @.domain;
   has Reference $.author;
@@ -7492,7 +7493,7 @@ class Contract is DomainResource is export {
 }
 class ValueSet_Expansion_Contains is FHIR is export {
   has Str $.id;
-  has Code $.code;
+  has FHIRCode $.code;
   has UriStr $.system;
   has Str $.version;
   has Str $.display;
@@ -7507,7 +7508,7 @@ class ValueSet_Expansion_Contains is FHIR is export {
 class ValueSet_Expansion_Parameter is FHIR is export {
   has Str $.id;
   has Str $.name is required;
-  has ChoiceField $.value where Bool|Code|Real|DateTime|Int|Str|UriStr;
+  has ChoiceField $.value where Bool|FHIRCode|Real|DateTime|Int|Str|UriStr;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -7525,9 +7526,9 @@ class ValueSet_Expansion is FHIR is export {
 
 class ValueSet_Compose_Include_Filter is FHIR is export {
   has Str $.id;
-  has Code $.op is required;
+  has FHIRCode $.op is required;
   has Str $.value is required;
-  has Code $.property is required;
+  has FHIRCode $.property is required;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -7536,13 +7537,13 @@ class ValueSet_Compose_Include_Concept_Designation is FHIR is export {
   has Str $.id;
   has Coding $.use;
   has Str $.value is required;
-  has Code $.language;
+  has FHIRCode $.language;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
 class ValueSet_Compose_Include_Concept is FHIR is export {
   has Str $.id;
-  has Code $.code is required;
+  has FHIRCode $.code is required;
   has Str $.display;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -7574,7 +7575,7 @@ class ValueSet is DomainResource is export {
   has Str $.name;
   has DateTime $.date;
   has Str $.title;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
@@ -7609,7 +7610,7 @@ class ElementDefinition_Base is FHIR is export {
 class ElementDefinition_Example is FHIR is export {
   has Str $.id;
   has Str $.label is required;
-  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Extension @.extension;
 }
 
@@ -7618,7 +7619,7 @@ class ElementDefinition_Mapping is FHIR is export {
   has Str $.map is required;
   has Str $.comment;
   has Id $.identity is required;
-  has Code $.language;
+  has FHIRCode $.language;
   has Extension @.extension;
 }
 
@@ -7627,14 +7628,14 @@ class ElementDefinition_Type is FHIR is export {
   has UriStr $.code is required;
   has Canonical @.profile;
   has Extension @.extension;
-  has Code $.versioning;
-  has Code @.aggregation;
+  has FHIRCode $.versioning;
+  has FHIRCode @.aggregation;
   has Canonical @.targetProfile;
 }
 
 class ElementDefinition_Binding is FHIR is export {
   has Str $.id;
-  has Code $.strength is required;
+  has FHIRCode $.strength is required;
   has Canonical $.valueSet;
   has Extension @.extension;
   has Str $.description;
@@ -7646,7 +7647,7 @@ class ElementDefinition_Constraint is FHIR is export {
   has Str $.human is required;
   has Str $.xpath;
   has Canonical $.source;
-  has Code $.severity is required;
+  has FHIRCode $.severity is required;
   has Extension @.extension;
   has Str $.expression;
   has Str $.requirements;
@@ -7654,13 +7655,13 @@ class ElementDefinition_Constraint is FHIR is export {
 
 class ElementDefinition_Slicing_Discriminator is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has Str $.path is required;
   has Extension @.extension;
 }
 class ElementDefinition_Slicing is FHIR is export {
   has Str $.id;
-  has Code $.rules is required;
+  has FHIRCode $.rules is required;
   has Bool $.ordered;
   has Extension @.extension;
   has Str $.description;
@@ -7676,22 +7677,22 @@ class ElementDefinition is BackboneElement is export {
   has Str $.short;
   has Str @.alias;
   has Markdown $.comment;
-  has ChoiceField $.fixed where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.fixed where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Str $.sliceName;
   has Int $.maxLength;
   has Id @.condition;
   has Bool $.isSummary;
   has Markdown $.definition;
-  has ChoiceField $.pattern where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.pattern where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Bool $.isModifier;
   has ChoiceField $.minValue where Real|Date|DateTime|Int|Instant|PositiveInt|Quantity|UnsignedInt|DateTime;
   has ChoiceField $.maxValue where Real|Date|DateTime|Int|Instant|PositiveInt|Quantity|UnsignedInt|DateTime;
   has Bool $.mustSupport;
   has Markdown $.requirements;
   has Str $.orderMeaning;
-  has Code @.representation;
+  has FHIRCode @.representation;
   has ElementDefinition_Base $.base;
-  has ChoiceField $.defaultValue where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|Code|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|Signature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.defaultValue where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has UriStr $.contentReference;
   has Str $.isModifierReason;
   has ElementDefinition_Example @.example;
@@ -7726,7 +7727,7 @@ class PlanDefinition_Goal is FHIR is export {
 
 class PlanDefinition_Action_Condition is FHIR is export {
   has Str $.id;
-  has Code $.kind is required;
+  has FHIRCode $.kind is required;
   has Extension @.extension;
   has Expression $.expression;
   has Extension @.modifierExtension;
@@ -7734,7 +7735,7 @@ class PlanDefinition_Action_Condition is FHIR is export {
 
 class PlanDefinition_Action_Participant is FHIR is export {
   has Str $.id;
-  has Code $.type is required;
+  has FHIRCode $.type is required;
   has CodeableConcept $.role;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -7753,7 +7754,7 @@ class PlanDefinition_Action_RelatedAction is FHIR is export {
   has Id $.actionId is required;
   has Extension @.extension;
   has ChoiceField $.offset where Duration|Range;
-  has Code $.relationship is required;
+  has FHIRCode $.relationship is required;
   has Extension @.modifierExtension;
 }
 class PlanDefinition_Action is FHIR is export {
@@ -7768,7 +7769,7 @@ class PlanDefinition_Action is FHIR is export {
   has DataRequirement @.output;
   has PlanDefinition_Action @.action;
   has TriggerDefinition @.trigger;
-  has Code $.priority;
+  has FHIRCode $.priority;
   has Extension @.extension;
   has ChoiceField $.timing where Age|Duration|DateTime|Period|Range|Timing;
   has Canonical $.transform;
@@ -7777,12 +7778,12 @@ class PlanDefinition_Action is FHIR is export {
   has RelatedArtifact @.documentation;
   has ChoiceField $.definition where Canonical|UriStr;
   has Str $.textEquivalent;
-  has Code $.groupingBehavior;
-  has Code $.requiredBehavior;
-  has Code $.precheckBehavior;
+  has FHIRCode $.groupingBehavior;
+  has FHIRCode $.requiredBehavior;
+  has FHIRCode $.precheckBehavior;
   has Extension @.modifierExtension;
-  has Code $.selectionBehavior;
-  has Code $.cardinalityBehavior;
+  has FHIRCode $.selectionBehavior;
+  has FHIRCode $.cardinalityBehavior;
   has PlanDefinition_Action_Condition @.condition;
   has PlanDefinition_Action_Participant @.participant;
   has PlanDefinition_Action_DynamicValue @.dynamicValue;
@@ -7798,7 +7799,7 @@ class PlanDefinition is DomainResource is export {
   has Str $.title;
   has Str $.usage;
   has CodeableConcept @.topic;
-  has Code $.status is required;
+  has FHIRCode $.status is required;
   has ContactDetail @.author;
   has ContactDetail @.editor;
   has Str $.version;
@@ -7836,23 +7837,23 @@ class SearchParameter is DomainResource is export {
   has UriStr $.url is required;
   has Str $.name is required;
   has DateTime $.date;
-  has Code $.code is required;
-  has Code @.base is required;
-  has Code $.type is required;
+  has FHIRCode $.code is required;
+  has FHIRCode @.base is required;
+  has FHIRCode $.type is required;
   has Str $.xpath;
   has Str @.chain;
-  has Code $.status is required;
-  has Code @.target;
+  has FHIRCode $.status is required;
+  has FHIRCode @.target;
   has Str $.version;
   has ContactDetail @.contact;
   has Markdown $.purpose;
-  has Code @.modifier;
+  has FHIRCode @.modifier;
   has Str $.publisher;
   has UsageContext @.useContext;
   has Str $.expression;
-  has Code $.xpathUsage;
+  has FHIRCode $.xpathUsage;
   has Bool $.multipleOr;
-  has Code @.comparator;
+  has FHIRCode @.comparator;
   has Canonical $.derivedFrom;
   has Markdown $.description is required;
   has Bool $.multipleAnd;
@@ -7862,7 +7863,7 @@ class SearchParameter is DomainResource is export {
 }
 class BiologicallyDerivedProduct_Storage is FHIR is export {
   has Str $.id;
-  has Code $.scale;
+  has FHIRCode $.scale;
   has Period $.duration;
   has Extension @.extension;
   has Str $.description;
@@ -7899,13 +7900,13 @@ class BiologicallyDerivedProduct_Manipulation is FHIR is export {
 
 class BiologicallyDerivedProduct is DomainResource is export {
   method resourceType(--> 'BiologicallyDerivedProduct') {}
-  has Code $.status;
+  has FHIRCode $.status;
   has Reference @.parent;
   has Reference @.request;
   has Int $.quantity;
   has Identifier @.identifier;
   has CodeableConcept $.productCode;
-  has Code $.productCategory;
+  has FHIRCode $.productCategory;
   has BiologicallyDerivedProduct_Storage @.storage;
   has BiologicallyDerivedProduct_Collection $.collection;
   has BiologicallyDerivedProduct_Processing @.processing;

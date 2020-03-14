@@ -6,7 +6,7 @@ subset Base64Binary of Buf is export;
 
 subset Markdown of Str is export;
 subset Canonical of Str is export;
-subset Code of Str is export;
+subset FHIRCode of Str is export;
 subset Id of Str is export;
 subset OID of Str is export;
 subset UriStr of Str is export;
