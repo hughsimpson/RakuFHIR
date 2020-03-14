@@ -82,7 +82,7 @@ multi valueToField(Attribute $att, Nil --> Array) {
 
 multi valueToField(Attribute $att, PrimitiveElement $v --> Array) {
     my $k = $att.name.split('!')[1];
-    my $key = $v.defined && $v ~~ ChoiceField ?? $k ~ $v.suffix !! $k;
+    my $key = $v.defined && $att.type ~~ ChoiceField ?? $k ~ $v.suffix !! $k;
     my @extra-fields;
     if $v ~~ PrimitiveElementId {
         my $vid = $v.id;

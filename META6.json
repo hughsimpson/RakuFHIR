@@ -23,8 +23,7 @@
   "resources": [],
   "license": "Artistic-2.0",
   "tags": [
-    "FHIR",
-    "LIT"
+    "FHIR"
   ],
   "api": "1",
   "source-url": "git://github.com/hughsimpson/RakuFHIR.git"
