@@ -43,6 +43,7 @@ class TriggerDefinition  { ... }
 role PrimitiveElement is export { }
 role PrimitiveElementId does PrimitiveElement is export { has Str $.id  }
 role PrimitiveElementExtension does PrimitiveElement is export { has Array[::Extension] $.extension }
+role PhantomValue is export { }
 
 class Resource is FHIR is export {
   method resourceType(--> 'Resource') {}

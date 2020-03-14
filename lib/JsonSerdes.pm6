@@ -94,7 +94,7 @@ multi valueToField(Attribute $att, PrimitiveElement $v --> Array) {
     };
     my $ped-str = '{' ~ @extra-fields.join(",") ~ '}';
     my Pair $extra-field = "_$key" => $ped-str;
-    my Pair $field = $key => jencode $v;
+    my Pair $field = $key => $v ~~ PhantomValue ?? Nil !! jencode $v;
     $extra-field ?? [$field, $extra-field] !! [$field];
 }
 
@@ -270,7 +270,7 @@ sub decodeAsHash(Hash:D $json, FHIR:U $CONSTRUCTOR --> FHIR:D) {
                     for @extension
                             .grep(*.url eq 'http://hl7.org/fhir/StructureDefinition/structuredefinition-json-type')
                             .map(*.value)
-                            .grep(* ~~ $att.type) { $val = $_ }
+                            .grep(* ~~ $att.type) { $val = $_ but PhantomValue }
                 }
                 my $decoded = decodeAs $val, $att.type;
                 if $id.defined && $decoded.defined { $decoded = $decoded but PrimitiveElementId(:$id) }
@@ -304,7 +304,7 @@ sub decodeAsHash(Hash:D $json, FHIR:U $CONSTRUCTOR --> FHIR:D) {
                         for @extension
                                 .grep(*.url eq 'http://hl7.org/fhir/StructureDefinition/structuredefinition-json-type')
                                 .map(*.value)
-                                .grep(* ~~ $att.type) { $val = $_ }
+                                .grep(* ~~ $att.type) { $val = $_ but PhantomValue }
                     }
                 }
                 my $res = jdec-choice $_, $val;
