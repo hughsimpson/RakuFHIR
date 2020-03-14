@@ -42,9 +42,10 @@ put "prepped for {+@models} models";
 plan +@models;
 
 my $start = now;
-for @models -> $model {
-    test-model $model;
-}
+
+if DEBUG { *.&test-model for @models }
+else { race for @models { test-model $_ } }
+
 my $end = now;
 
 put "Done in {$end - $start}s";
