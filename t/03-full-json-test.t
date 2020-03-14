@@ -7,6 +7,7 @@ use FHIR::DomainModel;
 use FHIR::JsonSerdes;
 
 constant DEBUG = False;
+my Int $max-tests = %*ENV<MAX_JSON_TESTS> // 2 ** 32;
 
 sub normalise-json(Str $s) {
     my $x = from-json $s.subst( '.000', '');
@@ -36,6 +37,8 @@ sub test-model(IO::Path $loc) {
 
 put 'loading defs';
 my IO::Path @models = grep { /.+ '.json'$/ }, |'./resources'.IO.dir;
+
+@models = @models[0..^$max-tests];
 
 put "prepped for {+@models} models";
 

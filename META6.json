@@ -19,6 +19,7 @@
   ],
   "provides": {
     "FHIR::Base": "lib/FHIR/Base.pm6",
+    "FHIR::Client": "lib/FHIR/Client.pm6",
     "FHIR::DomainModel": "lib/FHIR/DomainModel.pm6",
     "FHIR::JsonSerdes": "lib/FHIR/JsonSerdes.pm6"
   },
