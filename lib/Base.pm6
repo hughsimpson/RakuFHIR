@@ -2,8 +2,9 @@ use JSON::Fast;
 
 unit module Base;
 
-subset Markdown of Str is export;
 subset Base64Binary of Buf is export;
+
+subset Markdown of Str is export;
 subset Canonical of Str is export;
 subset Code of Str is export;
 subset Id of Str is export;

@@ -14,10 +14,11 @@
   "build-depends": [],
   "test-depends": [
     "Test",
+    "Test::META",
     "App::Prove6"
   ],
   "provides": {
-    "FHIR": "lib/Convenience.pm6",
+    "FHIR": "lib/Base.pm6",
     "FHIR::DomainModel": "lib/DomainModel.pm6",
     "FHIR::Serdes::Json": "lib/JsonSerdes.pm6"
   },
