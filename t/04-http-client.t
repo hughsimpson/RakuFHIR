@@ -1,11 +1,15 @@
+use v6.d;
+use lib 'lib';
+
 use Test;
 
+use FHIR::Base;
 use FHIR::Client;
 
 plan 1;
 
-my FHIRClient $cli .= new: :base-uri<http://localhost:9091>;
+my AsyncFHIRClient $cli .= new: :base-uri<http://localhost:9091>;
 
-is $cli, '', 'cli is empty string???';
+nok $cli eq '', 'cli is empty string???';
 
 done-testing;

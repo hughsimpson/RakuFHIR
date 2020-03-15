@@ -8,7 +8,7 @@ use FHIR::JsonSerdes;
 
 unit module Client;
 
-class FHIRJsonSerializer does Cro::HTTP::BodySerializer {
+class FHIRJsonSerializer does Cro::HTTP::BodySerializer is export {
     method is-applicable(Cro::HTTP::Message $message, $body --> Bool) {
         with $message.content-type {
             (.type eq 'application' && (.subtype eq 'json' or .subtype eq 'fhir+json' or .subtype eq 'json+fhir') || .suffix eq 'json') &&
@@ -26,7 +26,7 @@ class FHIRJsonSerializer does Cro::HTTP::BodySerializer {
     }
 }
 
-class FHIRJsonParser does Cro::BodyParser {
+class FHIRJsonParser does Cro::BodyParser is export {
     method is-applicable(Cro::HTTP::Message $message --> Bool) {
         with $message.content-type {
             .type eq 'application' && (.subtype eq 'json' or .subtype eq 'fhir+json' or .subtype eq 'json+fhir') || .suffix eq 'json'
@@ -45,12 +45,13 @@ class FHIRJsonParser does Cro::BodyParser {
             }
         })
     }
+}
 
-class FHIRClient {
+class AsyncFHIRClient is export {
     has Str $.base-uri;
     #TODO: Auth
-    has Cro::HTTP::Client $!client .= new: $base-uri, :content-type<application/fhir+json>, # :push-promises, #TODO: enable?
-            body-serializers => [ FHIRJsonSerializer ], body-parsers => [ FHIRJsonParser ];
+    has Cro::HTTP::Client $!client .= new: :$!base-uri, :content-type<application/fhir+json>, # :push-promises, #TODO: enable?
+            body-serializers => [ FHIRJsonSerializer.new ], body-parsers => [ FHIRJsonParser.new ];
 
     #`[ Common params:
 _format 	Override the HTTP content negotiation - see immediately below
@@ -59,30 +60,33 @@ _summary 	Ask for a predefined short form of the resource in response - see Sear
 _elements 	Ask for a particular set of elements to be returned - see Search Elements
     ]
     method read(Resource:U $type, Str $id --> Promise) {
-        $client.get: "/{$type.resourceType}/$id", query => { _summary => 'false' } #  _summary eq true, false, text, count or data.
+        $!client.get: "/{$type.resourceType}/$id", query => { _summary => 'false' } #  _summary eq true, false, text, count or data.
     }
     method vread(Resource:U $type, Str $id, Str $vid --> Promise) {
-        $client.get: "/{$type.resourceType}/$id/_history/$vid";
+        $!client.get: "/{$type.resourceType}/$id/_history/$vid";
     }
     method update(Resource:D $resource --> Promise) {
         return Promise.broken(X::AdHoc.new(payload => "Cannot update a resource without an id")) unless $resource.id.defined;
-        $client.put: "/{$resource.resourceType}/{$resource.id}", :body($resource);
+        $!client.put: "/{$resource.resourceType}/{$resource.id}", :body($resource);
     }
     method patch(Resource:U $type, Str $id, Parameters $patch --> Promise) { # IDK what $patch shou be? probably parameters as here https://www.hl7.org/fhir/fhirpatch.html so that's what they are for now
-        $client.patch: "/{$type.resourceType}/{$id}", :body($patch);
+        $!client.patch: "/{$type.resourceType}/{$id}", :body($patch);
     }
     multi method delete(Resource:U $type, Str $id --> Promise) {
-        $client.delete: "/{$type.resourceType}/{$id}";
+        $!client.delete: "/{$type.resourceType}/{$id}";
     }
     multi method delete(Resource:D $resource --> Promise) {
         return Promise.broken(X::AdHoc.new(payload => "Cannot delete a resource without an id")) unless $resource.id.defined;
         delete: $resource.WHAT, $resource.id;
     }
     method create(Resource:D $resource --> Promise) {
-        $client.post("/{$resource.resourceType}", :body($resource)).then({ .header('Location') });
+        $!client.post("/{$resource.resourceType}", :body($resource)).then({ .header('Location') });
     }
     method search(Resource:U $type --> Promise) {
-        $client.post("/{$resource.resourceType}", :body($resource)).then({ .header('Location') });
+        $!client.get: "/{$type.resourceType}", query => { _summary => 'false' };
+    }
+    method capabilities(--> Promise) {
+        $!client.get: "/metadata";
     }
     #`[
     read	Read the current state of the resource

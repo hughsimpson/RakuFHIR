@@ -1,6 +1,8 @@
+use v6.d;
+use lib 'lib';
+
 use Test;
 
-use lib 'lib';
 use FHIR::Base;
 use FHIR::DomainModel;
 
