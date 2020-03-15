@@ -66,20 +66,20 @@ _summary 	Ask for a predefined short form of the resource in response - see Sear
 _elements 	Ask for a particular set of elements to be returned - see Search Elements
     ]
     method read(Resource:U $type, Str $id --> Promise) {
-        $!client.get: "$!path-prefix/{$type.resourceType}/$id", query => { _summary => 'false' } #  _summary eq true, false, text, count or data.
+        $!client.get("$!path-prefix/{$type.resourceType}/$id", query => { _summary => 'false' }).then(*.result.body) #  _summary eq true, false, text, count or data.
     }
     method vread(Resource:U $type, Str $id, Str $vid --> Promise) {
-        $!client.get: "$!path-prefix/{$type.resourceType}/$id/_history/$vid";
+        $!client.get("$!path-prefix/{$type.resourceType}/$id/_history/$vid").then(*.result.body);
     }
     method update(Resource:D $resource --> Promise) {
         return Promise.broken(X::AdHoc.new(payload => "Cannot update a resource without an id")) unless $resource.id.defined;
-        $!client.put: "$!path-prefix/{$resource.resourceType}/{$resource.id}", :body($resource);
+        $!client.put("$!path-prefix/{$resource.resourceType}/{$resource.id}", :body($resource)).then(*.result.body);
     }
-    method patch(Resource:U $type, Str $id, Parameters $patch --> Promise) { # IDK what $patch shou be? probably parameters as here https://www.hl7.org/fhir/fhirpatch.html so that's what they are for now
-        $!client.patch: "$!path-prefix/{$type.resourceType}/{$id}", :body($patch);
+    method patch(Resource:U $type, Str $id, Parameters $patch --> Promise) { # IDK what $patch should be? probably parameters as here https://www.hl7.org/fhir/fhirpatch.html so that's what they are for now
+        $!client.patch("$!path-prefix/{$type.resourceType}/{$id}", :body($patch)).then({Nil});
     }
     multi method delete(Resource:U $type, Str $id --> Promise) {
-        $!client.delete: "$!path-prefix/{$type.resourceType}/{$id}";
+        $!client.delete("$!path-prefix/{$type.resourceType}/{$id}").then({Nil});
     }
     multi method delete(Resource:D $resource --> Promise) {
         return Promise.broken(X::AdHoc.new(payload => "Cannot delete a resource without an id")) unless $resource.id.defined;
@@ -88,8 +88,8 @@ _elements 	Ask for a particular set of elements to be returned - see Search Elem
     method create(Resource:D $resource --> Promise) {
         $!client.post("$!path-prefix/{$resource.resourceType}", :body($resource)).then({ .header('Location') });
     }
-    method search(Resource:U $type --> Promise) {
-        $!client.get: "$!path-prefix/{$type.resourceType}", query => { _summary => 'false' };
+    method search(Resource:U $type, Str %params --> Promise) {
+        $!client.get("$!path-prefix/{$type.resourceType}", query => %params).then(*.result.body);
     }
     method capabilities(--> Promise) {
         $!client.get("$!path-prefix/metadata").then(*.result.body);
@@ -119,10 +119,28 @@ class SyncFHIRClient is export {
     has AsyncFHIRClient $!client = AsyncFHIRClient.new: :$!fhir-server, :&!extra-headers;
 
     method read(Resource:U ::T, Str $id --> T) {
-        await $!client.read: ::T, $id;
+        await await $!client.read: ::T, $id;
     }
     method vread(Resource:U ::T, Str $id, Str $vid --> T) {
-        await $!client.vread: ::T, $id, $vid;
+        await await $!client.vread: ::T, $id, $vid;
+    }
+    method update(Resource:D $resource --> OperationOutcome) {
+        await await $!client.update: $resource;
+    }
+    method patch(Resource:U $type, Str $id, Parameters $patch --> Nil) {
+        await $!client.patch: $type, $id, $patch;
+    }
+    multi method delete(Resource:U $type, Str $id --> Nil) {
+        await $!client.delete: $type, $id;
+    }
+    multi method delete(Resource:D $resource --> Nil) {
+        await $!client.delete: $resource;
+    }
+    method create(Resource:D $resource --> Str) {
+        await $!client.create: $resource;
+    }
+    method search(Resource:U $type, Str %params --> Bundle) {
+        await await $!client.search: $type, %params;
     }
     method capabilities(--> CapabilityStatement) {
         await await $!client.capabilities;
