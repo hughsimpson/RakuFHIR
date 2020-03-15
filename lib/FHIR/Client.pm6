@@ -47,16 +47,17 @@ class FHIRJsonParser does Cro::BodyParser is export {
     }
 }
 
+sub return-empty(--> Array) { [] }
 class AsyncFHIRClient is export {
     has Str $.fhir-server is required;
     has Cro::Uri $!base-uri .= parse: $!fhir-server;
     has Str $!path-prefix = $!base-uri.path;
 
     has &fetch-token;
-    has Array $.extra-headers;
+    has &.extra-headers is default(&return-empty);
     #TODO: Auth
     has Cro::HTTP::Client $!client .= new: :$!base-uri, :content-type<application/fhir+json>, # :push-promises, #TODO: enable?
-            body-serializers => [ FHIRJsonSerializer.new ], body-parsers => [ FHIRJsonParser.new ], headers => $!extra-headers;
+            body-serializers => [ FHIRJsonSerializer.new ], body-parsers => [ FHIRJsonParser.new ], headers => &!extra-headers();
 
     #`[ Common params:
 _format 	Override the HTTP content negotiation - see immediately below
@@ -114,8 +115,8 @@ search
 
 class SyncFHIRClient is export {
     has Str $.fhir-server is required;
-    has Array $.extra-headers;
-    has AsyncFHIRClient $!client = AsyncFHIRClient.new: :$!fhir-server, :$!extra-headers;
+    has Array &.extra-headers is default(&return-empty);
+    has AsyncFHIRClient $!client = AsyncFHIRClient.new: :$!fhir-server, :&!extra-headers;
 
     method read(Resource:U ::T, Str $id --> T) {
         await $!client.read: ::T, $id;
