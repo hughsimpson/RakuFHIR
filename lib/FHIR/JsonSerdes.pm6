@@ -84,7 +84,7 @@ multi valueToField(Attribute $att, Nil --> Array) {
 multi valueToField(Attribute $att, PrimitiveElement $v --> Array) {
     my $k := $att.name.split('!')[1];
     my $key := $v.defined && $att.type ~~ ChoiceField ?? $k ~ $v.suffix !! $k;
-    my @extra-fields;
+    my @extra-fields = [];
     if $v ~~ PrimitiveElementId {
         my $vid := $v.id;
         @extra-fields.push: q:s`"id":"$vid"`
@@ -258,7 +258,7 @@ multi decodeAs(Any:D $json, $TPE) {
 }
 
 sub decodeAsHash(Hash:D $json, FHIR:U $CONSTRUCTOR --> FHIR:D) {
-    my %args := %();
+    my %args := {};
     my @atts = $CONSTRUCTOR.^attributes;
     my %atts := @atts.categorize({.type ~~ ChoiceField});
     if %atts{False} {for @(%atts{False}) -> $att {
