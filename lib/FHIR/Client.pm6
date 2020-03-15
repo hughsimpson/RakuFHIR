@@ -48,10 +48,15 @@ class FHIRJsonParser does Cro::BodyParser is export {
 }
 
 class AsyncFHIRClient is export {
-    has Str $.base-uri;
+    has Str $.fhir-server is required;
+    has Cro::Uri $!base-uri .= parse: $!fhir-server;
+    has Str $!path-prefix = $!base-uri.path;
+
+    has &fetch-token;
+    has Array $.extra-headers;
     #TODO: Auth
     has Cro::HTTP::Client $!client .= new: :$!base-uri, :content-type<application/fhir+json>, # :push-promises, #TODO: enable?
-            body-serializers => [ FHIRJsonSerializer.new ], body-parsers => [ FHIRJsonParser.new ];
+            body-serializers => [ FHIRJsonSerializer.new ], body-parsers => [ FHIRJsonParser.new ], headers => $!extra-headers;
 
     #`[ Common params:
 _format 	Override the HTTP content negotiation - see immediately below
@@ -60,33 +65,33 @@ _summary 	Ask for a predefined short form of the resource in response - see Sear
 _elements 	Ask for a particular set of elements to be returned - see Search Elements
     ]
     method read(Resource:U $type, Str $id --> Promise) {
-        $!client.get: "/{$type.resourceType}/$id", query => { _summary => 'false' } #  _summary eq true, false, text, count or data.
+        $!client.get: "$!path-prefix/{$type.resourceType}/$id", query => { _summary => 'false' } #  _summary eq true, false, text, count or data.
     }
     method vread(Resource:U $type, Str $id, Str $vid --> Promise) {
-        $!client.get: "/{$type.resourceType}/$id/_history/$vid";
+        $!client.get: "$!path-prefix/{$type.resourceType}/$id/_history/$vid";
     }
     method update(Resource:D $resource --> Promise) {
         return Promise.broken(X::AdHoc.new(payload => "Cannot update a resource without an id")) unless $resource.id.defined;
-        $!client.put: "/{$resource.resourceType}/{$resource.id}", :body($resource);
+        $!client.put: "$!path-prefix/{$resource.resourceType}/{$resource.id}", :body($resource);
     }
     method patch(Resource:U $type, Str $id, Parameters $patch --> Promise) { # IDK what $patch shou be? probably parameters as here https://www.hl7.org/fhir/fhirpatch.html so that's what they are for now
-        $!client.patch: "/{$type.resourceType}/{$id}", :body($patch);
+        $!client.patch: "$!path-prefix/{$type.resourceType}/{$id}", :body($patch);
     }
     multi method delete(Resource:U $type, Str $id --> Promise) {
-        $!client.delete: "/{$type.resourceType}/{$id}";
+        $!client.delete: "$!path-prefix/{$type.resourceType}/{$id}";
     }
     multi method delete(Resource:D $resource --> Promise) {
         return Promise.broken(X::AdHoc.new(payload => "Cannot delete a resource without an id")) unless $resource.id.defined;
         delete: $resource.WHAT, $resource.id;
     }
     method create(Resource:D $resource --> Promise) {
-        $!client.post("/{$resource.resourceType}", :body($resource)).then({ .header('Location') });
+        $!client.post("$!path-prefix/{$resource.resourceType}", :body($resource)).then({ .header('Location') });
     }
     method search(Resource:U $type --> Promise) {
-        $!client.get: "/{$type.resourceType}", query => { _summary => 'false' };
+        $!client.get: "$!path-prefix/{$type.resourceType}", query => { _summary => 'false' };
     }
     method capabilities(--> Promise) {
-        $!client.get: "/metadata";
+        $!client.get("$!path-prefix/metadata").then(*.result.body);
     }
     #`[
     read	Read the current state of the resource
@@ -107,4 +112,18 @@ search
 ]
 }
 
+class SyncFHIRClient is export {
+    has Str $.fhir-server is required;
+    has Array $.extra-headers;
+    has AsyncFHIRClient $!client = AsyncFHIRClient.new: :$!fhir-server, :$!extra-headers;
 
+    method read(Resource:U ::T, Str $id --> T) {
+        await $!client.read: ::T, $id;
+    }
+    method vread(Resource:U ::T, Str $id, Str $vid --> T) {
+        await $!client.vread: ::T, $id, $vid;
+    }
+    method capabilities(--> CapabilityStatement) {
+        await await $!client.capabilities;
+    }
+}
