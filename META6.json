@@ -9,7 +9,10 @@
   "auth": "github:hughsimpson",
   "depends": [
     "JSON::Fast",
-    "Base64"
+    "Base64",
+    "Cro::HTTP::Client",
+    "Cro::HTTP::BodySerializers",
+    "Cro::HTTP::BodyParsers"
   ],
   "build-depends": [],
   "test-depends": [
@@ -19,6 +22,7 @@
   ],
   "provides": {
     "FHIR::Base": "lib/FHIR/Base.pm6",
+    "FHIR::Client": "lib/FHIR/Client.pm6",
     "FHIR::DomainModel": "lib/FHIR/DomainModel.pm6",
     "FHIR::JsonSerdes": "lib/FHIR/JsonSerdes.pm6"
   },

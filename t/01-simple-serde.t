@@ -1,6 +1,9 @@
+use v6.d;
+use lib 'lib';
+
 use Test;
 use JSON::Fast;
-use lib 'lib';
+
 use FHIR::Base;
 use FHIR::DomainModel;
 use FHIR::JsonSerdes;

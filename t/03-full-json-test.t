@@ -1,7 +1,9 @@
+use v6.d;
+use lib 'lib';
+
 use Test;
 use JSON::Fast;
 
-use lib 'lib';
 use FHIR::Base;
 use FHIR::DomainModel;
 use FHIR::JsonSerdes;
@@ -36,6 +38,9 @@ sub test-model(IO::Path $loc) {
 
 put 'loading defs';
 my IO::Path @models = grep { /.+ '.json'$/ }, |'./resources'.IO.dir;
+
+my Int $max-tests = %*ENV<MAX_JSON_TESTS> // +@models;
+@models = @models[0..^$max-tests];
 
 put "prepped for {+@models} models";
 
