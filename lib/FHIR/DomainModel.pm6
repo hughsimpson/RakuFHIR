@@ -5938,7 +5938,7 @@ class List_Entry is FHIR is export {
   has Extension @.modifierExtension;
 }
 
-class List is DomainResource is export {
+class FHIRList is DomainResource is export {
   method resourceType(--> 'List') {}
   has FHIRCode $.mode is required;
   has CodeableConcept $.code;

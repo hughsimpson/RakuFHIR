@@ -125,6 +125,11 @@ sub jdecode(Str $json --> FHIR) is export {
     jdestructure %parsed;
 }
 
+sub jdecode-array(Str $json) is export {
+    my @parsed := |from-json $json;
+    @parsed.map: &jdestructure;
+}
+
 sub jdecodeAs(Str $json, FHIR:U $TARGET --> FHIR) is export {
     my %parsed := from-json $json;
     decodeAs %parsed, $TARGET;
@@ -247,7 +252,7 @@ multi decodeAs(Any:D $json, $TPE) {
     given $TPE {
         when Base64Binary { decode-base64($json, :bin) }
         when Canonical | FHIRCode | Id | Markdown | Str | OID | UriStr | UrlStr | UUID { $json }
-        when Int { $json }
+        when Real { $json }
         when Bool { $json }
         when Date { dec-date($json) }
         # TODO: This
