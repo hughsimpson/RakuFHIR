@@ -1,0 +1,144 @@
+{
+            "resourceType": "Bundle",
+            "type": "transaction",
+            "entry": [
+                {
+                    "fullUrl": "urn:uuid:patient",
+                    "resource": {
+                        "resourceType": "Patient",
+                        "identifier": [
+                            {
+                                "system": "https://fhir.bbl.health/sid/babylon-patient-id",
+                                "value": "${rick_id}"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST",
+                        "url": "/Patient",
+                        "ifNoneExist": "identifier=https://fhir.bbl.health/sid/babylon-patient-id|${rick_id}"
+                    }
+                },
+                {
+                    "fullUrl": "urn:uuid:practitioner",
+                    "resource": {
+                        "resourceType": "Practitioner",
+                        "extension": [
+                            {
+                                "url": "https://fhir.bbl.health/StructureDefinition/practitioner-is-machine",
+                                "valueBoolean": false
+                            }
+                        ],
+                        "identifier": [
+                            {
+                                "system": "https://fhir.bbl.health/sid/babylon-practitioner-id",
+                                "value": "${doctor_id}"
+                            }
+                        ]
+                    },
+                    "request": {
+                        "method": "POST",
+                        "url": "/Practitioner",
+                        "ifNoneExist": "identifier=https://fhir.bbl.health/sid/practitioner|${doctor_id}"
+                    }
+                },
+                {
+                    "fullUrl": "urn:uuid:machinePractitioner",
+                    "resource": {
+                        "resourceType": "PractitionerRole",
+                        "identifier": [
+                            {
+                                "system": "https://fhir.bbl.health/sid/practitioner-role",
+                                "value": "${doctor_id}_practionerrole"
+                            }
+                        ],
+                        "practitioner": {
+                            "reference": "urn:uuid:practitioner"
+                        }
+                    },
+                    "request": {
+                        "method": "POST",
+                        "url": "/PractitionerRole",
+                        "ifNoneExist": "identifier=https://fhir.bbl.health/sid/practitioner-role%7C${doctor_id}_practionerrole"
+                    }
+                },
+                {
+                    "fullUrl": "urn:uuid:encounter",
+                    "resource": {
+                        "resourceType": "Encounter",
+                        "participant": [
+                            {
+                                "individual": {
+                                    "reference": "urn:uuid:practitioner"
+                                }
+                            }
+                        ],
+                        "identifier": [
+                            {
+                                "system": "https://fhir.bbl.health/sid/consultation-id",
+                                "value": "Fake-clinical-portal-consultation-Id"
+                            }
+                        ],
+                        "class": {
+                            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                            "code": "EMER"
+                        },
+                        "status": "finished",
+                        "subject": {
+                            "reference": "urn:uuid:patient"
+                        },
+                        "period": {
+                            "start": "1970-01-01T00:00:00Z",
+                            "end": "1970-01-01T00:00:01Z"
+                        }
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "url": "/Encounter?identifier=https://bbl.health/sid/consultation-id|Fake-clinical-portal-consultation-Id"
+                    }
+                },
+                {
+                    "fullUrl": "urn:uuid:observation:caseId-o1",
+                    "resource": {
+                        "resourceType": "Observation",
+                        "meta": {
+                            "profile": [
+                                "https://fhir.bbl.health/StructureDefinition/BblBodyWeight"
+                            ]
+                        },
+                        "performer": [
+                            {
+                                "reference": "urn:uuid:patient"
+                            }
+                        ],
+                        "encounter": {
+                            "reference": "urn:uuid:encounter"
+                        },
+                        "status": "final",
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "https://bbl.health",
+                                    "code": "ykWNn2DwyB",
+                                    "display": "Body weight"
+                                }
+                            ]
+                        },
+                        "subject": {
+                            "reference": "urn:uuid:patient"
+                        },
+                        "effectiveDateTime": "2016-07-02",
+                        "valueQuantity": {
+                            "value": 185,
+                            "unit": "kg",
+                            "system": "http://unitsofmeasure.org",
+                            "code": "kg"
+                        }
+                    },
+                    "request": {
+                        "method": "POST",
+                        "url": "/Observation"
+                    }
+                }
+            ]
+        }

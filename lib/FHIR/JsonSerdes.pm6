@@ -290,6 +290,12 @@ sub decodeAsHash(Hash:D $json, FHIR:U $CONSTRUCTOR --> FHIR:D) {
                 %args{$key} := decodeAs $val, $att.type;
             }
         }
+        elsif $att.type ~~ Resource {
+            given $val {
+                when Array { %args{$key} := $val.map: &jdestructure  }
+                when Hash { %args{$key} := jdestructure $val }
+            }
+        }
         elsif $val.defined {
             %args{$key} := decodeAs $val, $att.type;
         }

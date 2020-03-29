@@ -37,7 +37,7 @@ sub test-model(IO::Path $loc) {
 }
 
 put 'loading defs';
-my IO::Path @models = grep { /.+ '.json'$/ }, |'./resources'.IO.dir;
+my IO::Path @models = grep { /.+ '.json'$/ }, |'./resources/structureDefinition'.IO.dir;
 
 my Int $max-tests = %*ENV<MAX_JSON_TESTS> // +@models;
 @models = @models[0..^$max-tests];
