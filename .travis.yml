@@ -1,4 +1,6 @@
 language: perl6
 perl6:
   - latest
-script: zef install .
+script:
+  rakudobrew build-zef
+  zef install .
