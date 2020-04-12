@@ -254,7 +254,7 @@ multi decodeAs(Hash:D $json, FHIR:U $CONSTRUCTOR --> FHIR:D) {
 multi decodeAs(Any:D $json, $TPE) {
     given $TPE {
         when Base64Binary { decode-base64($json, :bin) }
-        when Canonical | FHIRCode | Id | Markdown | Str | OID | UriStr | UrlStr | UUID { $json }
+        when Canonical | FHIRCode | Id | Markdown | Str | OID | UriStr | UrlStr | Uuid { $json }
         when Real { $json }
         when Bool { $json }
         when Date { dec-date($json) }

@@ -12,7 +12,9 @@
     "Base64",
     "Cro::HTTP::Client",
     "Cro::HTTP::BodySerializers",
-    "Cro::HTTP::BodyParsers"
+    "Cro::HTTP::BodyParsers",
+    "Cro::HTTP::Server",
+    "UUID"
   ],
   "build-depends": [],
   "test-depends": [
@@ -24,7 +26,9 @@
     "FHIR::Base": "lib/FHIR/Base.pm6",
     "FHIR::Client": "lib/FHIR/Client.pm6",
     "FHIR::DomainModel": "lib/FHIR/DomainModel.pm6",
-    "FHIR::JsonSerdes": "lib/FHIR/JsonSerdes.pm6"
+    "FHIR::JsonSerdes": "lib/FHIR/JsonSerdes.pm6",
+    "FHIR::Server": "lib/FHIR/Server.pm6",
+    "FHIR::Store": "lib/FHIR/Store.pm6"
   },
   "resources": [],
   "license": "Artistic-2.0",

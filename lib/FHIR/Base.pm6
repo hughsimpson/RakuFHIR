@@ -14,7 +14,7 @@ subset Id of Str is export;
 subset OID of Str is export;
 subset UriStr of Str is export;
 subset UrlStr of Str is export;
-subset UUID of Str is export;
+subset Uuid of Str is export;
 subset XHTML of Str is export;
 
 subset PositiveInt of Int is export where * > 0;
