@@ -1,3 +1,6 @@
+#!/usr/bin/env perl6
+use v6.d;
+
 use FHIR::Base;
 
 unit module DomainModel;
