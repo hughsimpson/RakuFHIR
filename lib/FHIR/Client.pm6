@@ -118,11 +118,12 @@ class SyncFHIRClient is export {
     has Array &.extra-headers is default(&return-empty);
     has AsyncFHIRClient $!client = AsyncFHIRClient.new: :$!fhir-server, :&!extra-headers;
 
-    method read(Resource:U ::T, Str $id --> T) {
-        await await $!client.read: ::T, $id;
+    # Should return `T` but rakudo throws a X::TypeCheck::Return even though the response is the correct type :'(
+    method read(Resource:U ::T, Str $id --> Resource) {
+        await await $!client.read: T, $id;
     }
-    method vread(Resource:U ::T, Str $id, Str $vid --> T) {
-        await await $!client.vread: ::T, $id, $vid;
+    method vread(Resource:U ::T, Str $id, Str $vid --> Resource) {
+        await await $!client.vread: T, $id, $vid;
     }
     method update(Resource:D $resource --> OperationOutcome) {
         await await $!client.update: $resource;

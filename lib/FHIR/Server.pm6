@@ -31,10 +31,7 @@ sub init(AbstractStore $store, Str :$host = '0.0.0.0', Int :$port = 10000) is ex
             request-body -> $body {
                 my Str $id = $store.insert($body);
                 response.status = 201;
-                response.append-header(Cro::HTTP::Header.new(
-                        name => 'Location',
-                        value => $id
-                        ));
+                response.append-header: Cro::HTTP::Header.new: :name<Location>, :value($id);
             }
         }
     }
