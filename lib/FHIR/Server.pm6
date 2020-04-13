@@ -24,7 +24,15 @@ sub init(AbstractStore $store, Str :$host = '0.0.0.0', Int :$port = 10000) is ex
         }
 
         get -> $tpe, $id {
-            content 'application/fhir+json', $store.read($tpe, $id);
+            my $rsc = $store.read: $tpe, $id;
+            response.status = 404 unless $rsc;
+            content 'application/fhir+json', $rsc;
+        }
+
+        get -> $tpe, $id, "_history", $vid {
+            my $rsc = $store.vread: $tpe, $id, +$vid;
+            response.status = 404 unless $rsc;
+            content 'application/fhir+json', $rsc;
         }
 
         post -> $tpe {
@@ -32,6 +40,15 @@ sub init(AbstractStore $store, Str :$host = '0.0.0.0', Int :$port = 10000) is ex
                 my Str $id = $store.insert($body);
                 response.status = 201;
                 response.append-header: Cro::HTTP::Header.new: :name<Location>, :value($id);
+            }
+        }
+
+        put -> $tpe, $id {
+            request-body -> $body {
+                my OperationOutcome $outcome = $store.update($body.clone: :$id);
+                response.status = 201;
+                response.append-header: Cro::HTTP::Header.new: :name<Location>, :value($id);
+                content 'application/fhir+json', $outcome;
             }
         }
     }

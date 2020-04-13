@@ -10,16 +10,19 @@ use FHIR::JsonSerdes;
 unit module Store;
 
 role AbstractStore is export {
-    method insert(Resource:D $rsc --> Nil) {
+    method insert(Resource:D $rsc --> Str) {
         ...
     }
-    method update(Resource:D $rsc --> Nil) {
+    method update(Resource:D $rsc --> OperationOutcome) {
         ...
     }
     method search(&filter --> Array[::Resource]) {
         ...
     }
     method read(Str $tpe, Str $id --> Resource) {
+        ...
+    }
+    method vread(Str $tpe, Str $id, Int $vid --> Resource) {
         ...
     }
     method patch(Str $tpe, Str $id, &patch --> Nil) {
@@ -28,25 +31,37 @@ role AbstractStore is export {
 }
 
 class InMemory does AbstractStore is export {
-    has Resource %!resources;
+    has %!resources;
     method insert(Resource:D $rsc --> Str) {
         my $id = ~UUID.new;
         my $rsc2 = $rsc.clone: :$id;
-        %!resources{"{$rsc2.resourceType}/$id"} = $rsc2;
+        %!resources{"{$rsc2.resourceType}/$id"} = [$rsc2];
         $id;
     }
-    method update(Resource:D $rsc --> Nil) {
-        my $el = %!resources{[$rsc.WHAT, $rsc.id]};
-        $el.defined ?? {$el := $rsc} !! die "cannot update missing resource";
+    method update(Resource:D $rsc --> OperationOutcome) {
+        my OperationOutcome_Issue @issues;
+        my Int $status = 202;
+        my $el := %!resources{"{$rsc.resourceType}/{$rsc.id}"};
+        $status = 422 and push @issues, OperationOutcome_Issue.new(
+                :code<not-found>, :severity<error>, :diagnostics{"Cannot find resource {$rsc.id} to update"}
+                ) unless $el.defined;
+        $el.push: $rsc;
+        push @issues, OperationOutcome_Issue.new:
+                :code<informational>, :severity<information>, :diagnostics("New version id is {$el - 1}");
+        $el.defined ?? OperationOutcome.new(:issue(@issues)) !! die "cannot update missing resource";
     }
     method search(&filter --> Array[::Resource]) {
         %!resources.values.grep(&filter)
     }
     method read(Str $tpe, Str $id --> Resource) {
-        %!resources{"$tpe/$id"}
+        my $el := %!resources{"$tpe/$id"};
+        $el.defined ?? $el[*-1] !! ::("DomainModel::$tpe")
+    }
+    method vread(Str $tpe, Str $id, Int $vid --> Resource) {
+        %!resources{"$tpe/$id"}[$vid]
     }
     method patch(Str $tpe, Str $id, &patch --> Nil) {
-        my $el = %!resources{"$tpe/$id"};
-        $el.defined ?? { $el := patch $el } !! die "cannot update missing resource";
+        my $el := %!resources{"$tpe/$id"};
+        $el.defined ?? { $el.push: patch $el[*-1] } !! die "cannot update missing resource";
     }
 }
