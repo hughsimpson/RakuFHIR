@@ -12,7 +12,7 @@ use FHIR::Client;
 use FHIR::Server;
 use FHIR::Store;
 
-plan 10;
+plan 13;
 
 # Initialise server
 my AbstractStore $store = InMemory.new;
@@ -56,5 +56,13 @@ my Observation $r5 = $cli.vread: Observation, $loc, ~0;
 my Observation $r6 = $cli.vread: Observation, $loc, ~1;
 ok $r5 eqv $r, "read the versioned response back (2)";
 ok $r6 eqv $updated, "read the versioned response back (3)";
+
+# Test resource deletion
+my $r7 = $cli.delete: Observation, $loc;
+ok $r7 eqv Any, "delete resource"; # I don't really want the response here to be 'Any', but it is what it is
+my Observation $r8 = try $cli.read: Observation, $loc;
+is $r8, Observation, "don't read deleted resource";
+my Observation $r9 = try $cli.vread: Observation, $loc, ~1;
+is $r9, Observation, "don't vread deleted resource";
 
 done-testing;

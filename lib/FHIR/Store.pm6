@@ -16,6 +16,9 @@ role AbstractStore is export {
     method update(Resource:D $rsc --> OperationOutcome) {
         ...
     }
+    method delete(Str $tpe, Str $id --> Nil) {
+        ...
+    }
     method search(&filter --> Array[::Resource]) {
         ...
     }
@@ -50,6 +53,9 @@ class InMemory does AbstractStore is export {
                 :code<informational>, :severity<information>, :diagnostics("New version id is {$el - 1}");
         $el.defined ?? OperationOutcome.new(:issue(@issues)) !! die "cannot update missing resource";
     }
+    method delete(Str $tpe, Str $id --> Nil) {
+        %!resources{"$tpe/$id"}:delete
+    }
     method search(&filter --> Array[::Resource]) {
         %!resources.values.grep(&filter)
     }
@@ -58,7 +64,7 @@ class InMemory does AbstractStore is export {
         $el.defined ?? $el[*-1] !! ::("DomainModel::$tpe")
     }
     method vread(Str $tpe, Str $id, Int $vid --> Resource) {
-        %!resources{"$tpe/$id"}[$vid]
+        %!resources{"$tpe/$id"}[$vid] // ::("DomainModel::$tpe")
     }
     method patch(Str $tpe, Str $id, &patch --> Nil) {
         my $el := %!resources{"$tpe/$id"};

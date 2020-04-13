@@ -51,6 +51,12 @@ sub init(AbstractStore $store, Str :$host = '0.0.0.0', Int :$port = 10000) is ex
                 content 'application/fhir+json', $outcome;
             }
         }
+
+        delete -> $tpe, $id {
+            my $outcome = $store.delete: $tpe, $id;
+            response.status = 200;
+            content 'application/fhir+json', $outcome;
+        }
     }
 
     my Cro::Service $service = Cro::HTTP::Server.new: :$host, :$port, :$application,
