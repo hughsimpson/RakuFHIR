@@ -8,7 +8,7 @@ use FHIR::Client;
 
 plan 2;
 
-my AsyncFHIRClient $cli .= new: :fhir-server<http://localhost:9091>, ;
+my AsyncFHIRClient $cli .= new: :fhir-server<http://localhost:9091>;
 my SyncFHIRClient $sync-cli .= new: :fhir-server<http://localhost:9091>;
 
 nok $cli eq '', 'cli is empty string???';

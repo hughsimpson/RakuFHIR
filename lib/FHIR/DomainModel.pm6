@@ -1,3 +1,6 @@
+#!/usr/bin/env perl6
+use v6.d;
+
 use FHIR::Base;
 
 unit module DomainModel;
@@ -102,7 +105,7 @@ class Parameters_Parameter is FHIR is export {
   has Str $.id;
   has Str $.name is required;
   has Parameters_Parameter @.part;
-  has ChoiceField $.value where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Resource $.resource;
   has Extension @.extension;
   has Extension @.modifierExtension;
@@ -325,7 +328,7 @@ class Binary is Resource is export {
 
 class Extension is Element is export {
   has Str $.url is required;
-  has ChoiceField $.value where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
 }
 
 class FHIRSignature is Element is export {
@@ -973,7 +976,7 @@ class StructureMap_Group_Rule_Source is FHIR is export {
   has Extension @.extension;
   has Str $.condition;
   has Str $.logMessage;
-  has ChoiceField $.defaultValue where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.defaultValue where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Extension @.modifierExtension;
 }
 
@@ -2607,7 +2610,7 @@ class Condition is DomainResource is export {
 class Task_Input is FHIR is export {
   has Str $.id;
   has CodeableConcept $.type is required;
-  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -2615,7 +2618,7 @@ class Task_Input is FHIR is export {
 class Task_Output is FHIR is export {
   has Str $.id;
   has CodeableConcept $.type is required;
-  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Extension @.extension;
   has Extension @.modifierExtension;
 }
@@ -7610,7 +7613,7 @@ class ElementDefinition_Base is FHIR is export {
 class ElementDefinition_Example is FHIR is export {
   has Str $.id;
   has Str $.label is required;
-  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.value is required where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Extension @.extension;
 }
 
@@ -7677,13 +7680,13 @@ class ElementDefinition is BackboneElement is export {
   has Str $.short;
   has Str @.alias;
   has Markdown $.comment;
-  has ChoiceField $.fixed where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.fixed where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Str $.sliceName;
   has Int $.maxLength;
   has Id @.condition;
   has Bool $.isSummary;
   has Markdown $.definition;
-  has ChoiceField $.pattern where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.pattern where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has Bool $.isModifier;
   has ChoiceField $.minValue where Real|Date|DateTime|Int|Instant|PositiveInt|Quantity|UnsignedInt|DateTime;
   has ChoiceField $.maxValue where Real|Date|DateTime|Int|Instant|PositiveInt|Quantity|UnsignedInt|DateTime;
@@ -7692,7 +7695,7 @@ class ElementDefinition is BackboneElement is export {
   has Str $.orderMeaning;
   has FHIRCode @.representation;
   has ElementDefinition_Base $.base;
-  has ChoiceField $.defaultValue where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|UUID|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
+  has ChoiceField $.defaultValue where Address|Age|Annotation|Attachment|Base64Binary|Bool|Canonical|FHIRCode|CodeableConcept|Coding|ContactDetail|ContactPoint|Contributor|Count|DataRequirement|Distance|Dosage|Real|Duration|Expression|Date|DateTime|HumanName|Id|Identifier|Int|Instant|Markdown|Money|OID|ParameterDefinition|Period|PositiveInt|Quantity|Range|Ratio|Reference|RelatedArtifact|SampledData|FHIRSignature|Str|Timing|TriggerDefinition|Uuid|UnsignedInt|UriStr|UrlStr|UsageContext|DateTime;
   has UriStr $.contentReference;
   has Str $.isModifierReason;
   has ElementDefinition_Example @.example;
