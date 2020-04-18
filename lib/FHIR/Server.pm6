@@ -12,9 +12,6 @@ use FHIR::Store;
 
 unit module Server;
 
-#sub type-from-string(Str $tpe --> Resource:U) {
-#    ::("DomainModel::$tpe")
-#}
 
 sub init(AbstractStore $store, Str :$host = '0.0.0.0', Int :$port = 10000) is export {
     my $application = route {
