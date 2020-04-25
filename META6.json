@@ -14,7 +14,6 @@
     "Cro::HTTP::BodySerializers",
     "Cro::HTTP::BodyParsers",
     "Cro::HTTP::Server",
-    "Red",
     "UUID"
   ],
   "build-depends": [],
