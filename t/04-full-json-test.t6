@@ -20,8 +20,8 @@ sub test-model(IO::Path $loc) {
     put "looking at {$loc.basename}";
     my Str $slurped = $loc.slurp;
     my Str $normalised = normalise-json $slurped;
-    my StructureDefinition $decoded = jdecode $slurped;
-    my Str $encoded = normalise-json jencode $decoded;
+    my StructureDefinition() $decoded = $slurped;
+    my Str $encoded = normalise-json ~$decoded;
     if $decoded.kind ~~ 'primitive-type' {
         is "", "", "{$loc.basename} skipped, since primitive";
     } else {

@@ -23,7 +23,7 @@ class FHIRJsonSerializer does Cro::HTTP::BodySerializer is export {
     }
 
     method serialize(Cro::HTTP::Message $message, $body --> Supply) {
-        my $json = jencode($body).encode('utf-8');
+        my $json = $body.Str.encode('utf-8');
         self!set-content-length($message, $json.bytes);
         supply { emit $json }
     }

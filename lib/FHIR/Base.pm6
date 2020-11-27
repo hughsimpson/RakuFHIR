@@ -22,8 +22,58 @@ subset UnsignedInt of Int is export where * >= 0;
 
 subset Primitive of Any is export where * ~~ Str|Real|Date|DateTime|Bool|Buf;
 
+my $RscType;
+my $ElemType;
+sub Rsc {
+    return $RscType if $RscType;
+    require ::FHIR::DomainModel;
+    $RscType = ::('DomainModel::Resource');
+    $RscType
+};
+sub Elem {
+    return $ElemType if $ElemType;
+    require ::FHIR::DomainModel;
+    $ElemType = ::('DomainModel::Element');
+    $ElemType
+};
+my &encoder;
+my &decoder;
+my &decoderAs;
+
 role FHIR is export {
-    proto method resourceType(--> Str) {
+    proto method resourceType(--> Str) {}
+    sub dec(Str $s) {
+        return decoder $s if &decoder;
+        require ::FHIR::JsonSerdes <&jdecode>;
+        &decoder = &jdecode;
+        decoder $s
+    };
+    sub decAs(Str $s, FHIR:U $c) {
+        return decoderAs $s, $c if &decoderAs;
+        require ::FHIR::JsonSerdes <&jdecodeAs>;
+        &decoderAs = &jdecodeAs;
+        decoderAs $s, $c
+    };
+    sub enc(FHIR:D $fhir) {
+        return encoder $fhir if &encoder;
+        require ::FHIR::JsonSerdes <&jencode>;
+        &encoder = &jencode;
+        encoder $fhir
+    }
+    multi method COERCE(Str $value) {
+        if self ~~ Rsc() { dec $value }
+        elsif self ~~ Elem() { decAs $value, self }
+        else { die "Cannot convert Str to {self.raku} (self ~~ {Rsc().raku}) = {self ~~ Rsc()}; self ~~ {Elem().raku}) = {self ~~ Elem()})" }
+    }
+    multi method COERCE($value) {
+        do given $value {
+            when [Str, FHIR:U] { decAs .[0], .[1] }
+            when [FHIR:U, Str] { decAs .[1], .[0] }
+            default { die "Cannot convert $_ to FHIR" }
+        }
+    }
+    method Str {
+        enc(self);
     }
 }
 
