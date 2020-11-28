@@ -24,40 +24,42 @@ subset Primitive of Any is export where * ~~ Str|Real|Date|DateTime|Bool|Buf;
 
 my $RscType;
 my $ElemType;
-sub Rsc {
-    return $RscType if $RscType;
-    require ::FHIR::DomainModel;
-    $RscType = ::('DomainModel::Resource');
-    $RscType
-};
-sub Elem {
-    return $ElemType if $ElemType;
-    require ::FHIR::DomainModel;
-    $ElemType = ::('DomainModel::Element');
-    $ElemType
-};
 my &encoder;
 my &decoder;
 my &decoderAs;
+my &initialise = {
+    &initialise = {;}; # only call once. Should be guarded by an atomic bool. It is not.
+    put "initialising serdes for Str <=> FHIR coercion";
+    require ::FHIR::DomainModel <Resource Element>;
+    require ::FHIR::JsonSerdes <&jdecode &jdecodeAs &jencode>;
+    $RscType := Resource;
+    $ElemType := Element;
+    &decoder = &jdecode;
+    &decoderAs = &jdecodeAs;
+    &encoder = &jencode;
+    put "initialisation successful";
+}
+sub Rsc {
+    initialise;
+    $RscType
+};
+sub Elem {
+    initialise;
+    $ElemType
+};
 
 role FHIR is export {
     proto method resourceType(--> Str) {}
     sub dec(Str $s) {
-        return decoder $s if &decoder;
-        require ::FHIR::JsonSerdes <&jdecode>;
-        &decoder = &jdecode;
+        initialise;
         decoder $s
     };
     sub decAs(Str $s, FHIR:U $c) {
-        return decoderAs $s, $c if &decoderAs;
-        require ::FHIR::JsonSerdes <&jdecodeAs>;
-        &decoderAs = &jdecodeAs;
+        initialise;
         decoderAs $s, $c
     };
     sub enc(FHIR:D $fhir) {
-        return encoder $fhir if &encoder;
-        require ::FHIR::JsonSerdes <&jencode>;
-        &encoder = &jencode;
+        initialise;
         encoder $fhir
     }
     multi method COERCE(Str $value) {
