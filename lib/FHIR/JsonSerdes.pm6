@@ -9,6 +9,10 @@ use FHIR::DomainModel;
 
 unit module JsonSerdes;
 
+INIT {
+    initialise-coercion-methods &jdecode, &jdecodeAs, &jencode;
+}
+
 sub is-primitive-suffix(Str $s --> Bool) {
     $s ~~
             'Base64Binary'|'Boolean'|'Canonical'|'Code'|'Date'|'DateTime'|'Decimal'|'Id'|'Instant'|'Integer'|'Markdown'|

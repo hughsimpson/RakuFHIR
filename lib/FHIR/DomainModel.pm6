@@ -62,6 +62,10 @@ class Element is FHIR is export {
   has Extension @.extension;
 }
 
+INIT {
+    initialise-FHIR-model-base Resource, Element;
+}
+
 class UsageContext is Element is export {
   has Coding $.code is required;
   has ChoiceField $.value is required where CodeableConcept|Quantity|Range|Reference;
