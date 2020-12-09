@@ -22,60 +22,45 @@ subset UnsignedInt of Int is export where * >= 0;
 
 subset Primitive of Any is export where * ~~ Str|Real|Date|DateTime|Bool|Buf;
 
-my $RscType;
-my $ElemType;
+role FHIR is export { ... }
+
+my FHIR:U $RscType;
+my FHIR:U $ElemType;
 my &encoder;
 my &decoder;
 my &decoderAs;
-my &initialise = {
-    &initialise = {;}; # only call once. Should be guarded by an atomic bool. It is not.
-    put "initialising serdes for Str <=> FHIR coercion";
-    require ::FHIR::DomainModel <Resource Element>;
-    require ::FHIR::JsonSerdes <&jdecode &jdecodeAs &jencode>;
+sub initialise-FHIR-model-base(FHIR:U \Resource, FHIR:U \Element) is export {
+    return put "initialisation of FHIR model base skipped" if [&] ($RscType, $ElemType);
+    put "initialising FHIR model base";
     $RscType := Resource;
     $ElemType := Element;
+    put "initialisation of FHIR model base successful";
+}
+sub initialise-coercion-methods(&jdecode, &jdecodeAs, &jencode) is export {
+    return put "initialisation skipped" if [&] (&encoder, &decoder, &decoderAs);
+    put "initialising serdes for Str <=> FHIR coercion";
     &decoder = &jdecode;
     &decoderAs = &jdecodeAs;
     &encoder = &jencode;
-    put "initialisation successful";
+    put "initialisation of serdes successful";
 }
-sub Rsc {
-    initialise;
-    $RscType
-};
-sub Elem {
-    initialise;
-    $ElemType
-};
 
 role FHIR is export {
     proto method resourceType(--> Str) {}
-    sub dec(Str $s) {
-        initialise;
-        decoder $s
-    };
-    sub decAs(Str $s, FHIR:U $c) {
-        initialise;
-        decoderAs $s, $c
-    };
-    sub enc(FHIR:D $fhir) {
-        initialise;
-        encoder $fhir
-    }
     multi method COERCE(Str $value) {
-        if self ~~ Rsc() { dec $value }
-        elsif self ~~ Elem() { decAs $value, self }
-        else { die "Cannot convert Str to {self.raku} (self ~~ {Rsc().raku}) = {self ~~ Rsc()}; self ~~ {Elem().raku}) = {self ~~ Elem()})" }
+        if self ~~ $RscType { decoder $value }
+        elsif self ~~ $ElemType { decoderAs $value, self }
+        else { die "Cannot convert Str to {self.raku} (self ~~ {$RscType.raku}) = {self ~~ $RscType}; self ~~ {$ElemType.raku}) = {self ~~ $ElemType})" }
     }
     multi method COERCE($value) {
         do given $value {
-            when [Str, FHIR:U] { decAs .[0], .[1] }
-            when [FHIR:U, Str] { decAs .[1], .[0] }
+            when [Str, FHIR:U] { decoderAs .[0], .[1] }
+            when [FHIR:U, Str] { decoderAs .[1], .[0] }
             default { die "Cannot convert $_ to FHIR" }
         }
     }
     method Str {
-        enc(self);
+        encoder(self);
     }
 }
 
