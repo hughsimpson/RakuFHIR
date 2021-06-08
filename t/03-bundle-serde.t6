@@ -10,7 +10,7 @@ use FHIR::JsonSerdes;
 
 plan 2;
 
-my $b-str = slurp './resources/bundle.json';
+my $b-str = slurp './t/resources/bundle.json';
 my Bundle() $bundle = $b-str;
 my $bundle-json = from-json $b-str;
 my $x = $bundle.entry[0].resource.identifier[0].system;
