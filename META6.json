@@ -6,7 +6,7 @@
   "authors": [
     "Hugh Simpson"
   ],
-  "auth": "github:hughsimpson",
+  "auth": "zef:hughsimpson",
   "depends": [
     "JSON::Fast",
     "Base64",
