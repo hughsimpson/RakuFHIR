@@ -1,5 +1,5 @@
 # RakuFHIR
-A FHIR (v4.0.1) domain model and client implementation for Raku (née Perl6), with json serdes
+A [FHIR (v4.0.1)](https://www.hl7.org/fhir/overview.html) domain model and client implementation for Raku (née Perl6), with json serdes
 
 Immature, unperformant and and experimental.
 
