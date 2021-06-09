@@ -3,7 +3,9 @@ A FHIR (v4.0.1) domain model and client implementation for Raku (née Perl6), wi
 
 Immature, unperformant and and experimental.
 
-Serialization is currently intended to be done via the coercion API, though this might revert
+Serialization (outside of the context of the client module) is currently intended to be done via the coercion API, though this might revert
+
+To use, `zef install FHIR` should work
 
 A usage might be something like:
 ```
