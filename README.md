@@ -8,7 +8,7 @@ Serialization (outside of the context of the client module) is currently intende
 To use, `zef install FHIR` should work
 
 A usage might be something like:
-```
+```raku
 # Import
 use FHIR::Base;
 use FHIR::DomainModel;
