@@ -17,7 +17,7 @@ jobs:
       - name: install rakudo
         run: |
           curl https://rakubrew.org/install-on-perl.sh | sh
-          eval "$(~/.rakubrew/rakubrew init Bash)"
+          eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)"
           rakubrew build moar
           rakubrew build zef
       - name: Cache
@@ -27,6 +27,6 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('META6.json') }}
       - name: Run zef install .
         run: |
-          eval "$(~/.rakubrew/rakubrew init Bash)"
+          eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)"
           export OPENSSL_PREFIX=$(ldconfig -p | grep libssl.so | awk -F' ' '{print $NF}')
           zef install .
