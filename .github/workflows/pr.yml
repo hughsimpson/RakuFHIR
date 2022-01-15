@@ -11,6 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get openssl
-        run: apt-get update && apt-get install openssl -y
+        run: sudo apt-get update && sudo apt-get install openssl -y
       - name: Test via install
         uses: JJ/raku-test-action@main
