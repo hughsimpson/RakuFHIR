@@ -13,7 +13,8 @@ jobs:
       - name: Get openssl
         run: >
           sudo apt-get update &&
-          sudo apt-get install curl git openssl -y &&
-          ln -s /lib/x86_64-linux-gnu/libssl.so.1.1 /lib/x86_64-linux-gnu/libssl.so
+          sudo apt-get install curl git openssl -y
+      - name: Add libssl.so to path
+        run: echo $(ldconfig -p | grep libssl.so | awk -F' ' '{print $NF}') >> $GITHUB_PATH
       - name: Test via install
         uses: JJ/raku-test-action@main
