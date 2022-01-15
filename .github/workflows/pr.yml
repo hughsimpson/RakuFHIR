@@ -14,12 +14,12 @@ jobs:
         run: >
           sudo apt-get update &&
           sudo apt-get install curl git openssl -y
-      - name: Run zef install .
+      - name: Cache
         uses: actions/cache@v2
-        id: meta6
         with:
           path: ~/.raku/
           key: ${{ runner.os }}-${{ hashFiles('META6.json') }}
+      - name: Run zef install .
         run: |
           export OPENSSL_PREFIX=$(ldconfig -p | grep libssl.so | awk -F' ' '{print $NF}')
           zef install .
