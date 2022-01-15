@@ -21,7 +21,7 @@ jobs:
           key: ${{ runner.os }}
       - name: install rakudo
         run: |
-          zef --version || (
+          (eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)" && zef --version) || (
             curl https://rakubrew.org/install-on-perl.sh | sh
             eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)"
             rakubrew build moar
