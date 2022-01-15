@@ -23,12 +23,12 @@
     "App::Prove6"
   ],
   "provides": {
-    "FHIR::Base": "lib/FHIR/Base.pm6",
-    "FHIR::Client": "lib/FHIR/Client.pm6",
-    "FHIR::DomainModel": "lib/FHIR/DomainModel.pm6",
-    "FHIR::JsonSerdes": "lib/FHIR/JsonSerdes.pm6",
-    "FHIR::Server": "lib/FHIR/Server.pm6",
-    "FHIR::Store": "lib/FHIR/Store.pm6"
+    "FHIR::Base": "lib/FHIR/Base.rakumod",
+    "FHIR::Client": "lib/FHIR/Client.rakumod",
+    "FHIR::DomainModel": "lib/FHIR/DomainModel.rakumod",
+    "FHIR::JsonSerdes": "lib/FHIR/JsonSerdes.rakumod",
+    "FHIR::Server": "lib/FHIR/Server.rakumod",
+    "FHIR::Store": "lib/FHIR/Store.rakumod"
   },
   "resources": [],
   "license": "Artistic-2.0",
