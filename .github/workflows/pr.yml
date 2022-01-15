@@ -35,5 +35,5 @@ jobs:
       - name: Run zef install .
         run: |
           eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)"
-          zef --/test install .
+          zef install . --/test --test-depends
           zef test .
