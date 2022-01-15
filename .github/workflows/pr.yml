@@ -35,5 +35,5 @@ jobs:
       - name: Run zef install .
         run: |
           eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)"
-          export OPENSSL_PREFIX=$(ldconfig -p | grep libssl.so | tail -1 | awk -F' ' '{print $NF}')
+          export OPENSSL_PREFIX=$(/usr/bin/openssl)
           zef install .
