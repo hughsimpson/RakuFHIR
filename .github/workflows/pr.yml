@@ -11,6 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get openssl
-        run: sudo apt-get update && sudo apt-get install curl git openssl -y
+        run: >
+          sudo apt-get update &&
+          sudo apt-get install curl git openssl -y &&
+          ln -s /lib/x86_64-linux-gnu/libssl.so.1.1 /lib/x86_64-linux-gnu/libssl.so
       - name: Test via install
         uses: JJ/raku-test-action@main
