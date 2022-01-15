@@ -14,16 +14,23 @@ jobs:
         run: >
           sudo apt-get update &&
           sudo apt-get install build-essential curl git libssl-dev openssl -y
-      - name: install rakudo
-        run: |
-          curl https://rakubrew.org/install-on-perl.sh | sh
-          eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)"
-          rakubrew build moar
-          rakubrew build zef
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: ~/.raku/
+          path: /home/runner/.rakubrew/
+          key: ${{ runner.os }}
+      - name: install rakudo
+        run: |
+          zef --version || (
+            curl https://rakubrew.org/install-on-perl.sh | sh
+            eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)"
+            rakubrew build moar
+            rakubrew build zef
+          )
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/.raku/
           key: ${{ runner.os }}-${{ hashFiles('META6.json') }}
       - name: Run zef install .
         run: |
