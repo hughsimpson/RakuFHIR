@@ -16,7 +16,7 @@ jobs:
           sudo apt-get install build-essential curl git libssl-dev openssl -y
       - name: install rakudo
         run: |
-          curl https://rakubrew.org/install-on-macos.sh | sh
+          curl https://rakubrew.org/install-on-perl.sh | sh
           eval "$(~/.rakubrew/rakubrew init Bash)"
           rakubrew build moar
           rakubrew build zef
