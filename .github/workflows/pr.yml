@@ -14,7 +14,12 @@ jobs:
         run: >
           sudo apt-get update &&
           sudo apt-get install curl git openssl -y
-      - name: Add libssl.so to path
-        run: echo $(ldconfig -p | grep libssl.so | awk -F' ' '{print $NF}') >> $GITHUB_PATH
-      - name: Test via install
-        uses: JJ/raku-test-action@main
+      - name: Run zef install .
+        uses: actions/cache@v2
+        id: meta6
+        with:
+          path: ~/.raku/
+          key: ${{ runner.os }}-${{ hashFiles('META6.json') }}
+        run: |
+          export OPENSSL_PREFIX=$(ldconfig -p | grep libssl.so | awk -F' ' '{print $NF}')
+          zef install .
