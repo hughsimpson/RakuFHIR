@@ -30,7 +30,7 @@ jobs:
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: /home/runner/.raku/
+          path: ~/.raku/
           key: ${{ runner.os }}-${{ hashFiles('META6.json') }}
       - name: Run zef install .
         run: |
