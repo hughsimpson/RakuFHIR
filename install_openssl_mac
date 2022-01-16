@@ -1,0 +1,1 @@
+OPENSSL_PREFIX=/usr/local/opt/openssl@1.1 zef install OpenSSL
