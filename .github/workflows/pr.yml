@@ -30,10 +30,10 @@ jobs:
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: ~/.raku/
-          key: ${{ runner.os }}-v1-${{ hashFiles('META6.json') }}
+          path: /home/runner/.raku/
+          key: ${{ runner.os }}-v2-${{ hashFiles('META6.json') }}
       - name: Run zef install .
         run: |
           eval "$(/home/runner/.rakubrew/bin/rakubrew init Bash)"
           zef install . --/test --test-depends
-          zef test .
+          prove6 --lib t/
